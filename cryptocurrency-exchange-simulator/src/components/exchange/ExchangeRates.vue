@@ -1,9 +1,16 @@
 <template>
   <div class="exchangeRates">
-    <p>{{currenciesList}}</p>
+    <!--<p>{{currenciesList}}</p>-->
+    <b-container class="bv-example-row">
+      <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
+        <b-col>
+          <b-table striped hover :items="rates"  >
+          </b-table>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
-
 <script>
 import { ApiService } from '../../services/api.service'
 
@@ -11,7 +18,8 @@ export default {
   name: 'ExchangeRates',
   data () {
     return {
-      currenciesList: []
+      currenciesList: [],
+      rates: []
     }
   },
   created () {
@@ -20,6 +28,7 @@ export default {
   methods: {
     async fetchData () {
       this.currenciesList = await ApiService.getCurrenciesInfo()
+      this.rates = this.currenciesList[0].rates
     }
   }
 }
