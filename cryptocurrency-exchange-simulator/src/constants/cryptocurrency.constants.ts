@@ -1,0 +1,31 @@
+export class CryptocurrencyConsts {
+  public static BTC: string = "BTC";
+  public static ETH: string = "ETH";
+  public static LSK: string = "LSK";
+  public static LTC: string = "LTC";
+  public static GAME: string = "GAME";
+  public static DASH: string = "DASH";
+  public static BCC: string = "BCC";
+  public static BTG: string = "BTG";
+  public static KZC: string = "KZC";
+  public static XIN: string = "XIN";
+  public static XRP: string = "XRP";
+  public static ZEC: string = "ZEC";
+  public static GNT: string = "GNT";
+  public static OMG: string = "OMG";
+  public static FTO: string = "FTO";
+  public static ZRX: string = "ZRX";
+  public static PAY: string = "PAY";
+  public static BAT: string = "BAT";
+  public static REP: string = "REP";
+  public static NEU: string = "NEU";
+  public static TRX: string = "TRX";
+  public static AMLT: string = "AMLT";
+  public static EXY: string = "EXY";
+  public static BOB: string = "BOB";
+  public static LML: string = "LML";
+  public static BSV: string = "BSV";
+  public static BCP: string = "BCP";
+  public static XLM: string = "XLM";
+  public static ALG: string = "ALG";
+}

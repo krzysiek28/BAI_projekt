@@ -1,20 +1,18 @@
 <template>
   <div class="home">
-    <p> ------------------ </p>
-    <p> Generated content: </p>
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <H1>HOME VIEW</H1>
+    <cryptocurrency-list></cryptocurrency-list>
+
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import CryptocurrencyList from '@/components/cryptocurrency/CryptocurrencyList'
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    CryptocurrencyList
   }
 }
 </script>
