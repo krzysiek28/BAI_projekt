@@ -25,6 +25,14 @@ export default {
   created () {
     const asyncIntervals = []
 
+    const intervalId = window.setInterval(() => { return 0 }, 9999)
+    for (let i = 1; i < intervalId; i++) { window.clearInterval(i) }
+    const clearAsyncInterval = (intervalIndex) => {
+      if (asyncIntervals[intervalIndex]) {
+        asyncIntervals[intervalIndex] = false
+      }
+    }
+
     const runAsyncInterval = async (cb, interval, intervalIndex) => {
       await cb()
       if (asyncIntervals[intervalIndex]) {
@@ -43,14 +51,9 @@ export default {
       }
     }
 
-    const clearAsyncInterval = (intervalIndex) => {
-      if (asyncIntervals[intervalIndex]) {
-        asyncIntervals[intervalIndex] = false
-      }
-    }
     setAsyncInterval(async () => {
       const promise = new Promise((resolve) => {
-        setTimeout(resolve(this.fetchData()), 5000)
+        setTimeout(resolve(this.fetchData()), 1000)
       })
       await promise
     }, 5000)
