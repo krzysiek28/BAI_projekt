@@ -18,13 +18,15 @@
         </b-col>
       </b-row>
     </b-container>
+    {{cryptocurrecyDetails}}
   </div>
 </template>
 <script>
-import { Component, Vue } from 'vue-property-decorator'
+import { ApiService, OperationType } from '@/services/api.service'
+import { CryptocurrencyConsts } from '@/constants/cryptocurrency.constants'
 
-@Component
-export default class CryptocurrencyList extends Vue {
+export default {
+  name: 'ExchangeRates',
   data () {
     return {
       currency: [
@@ -38,7 +40,16 @@ export default class CryptocurrencyList extends Vue {
         { cryptocurrency: 'BitCoin2', details: 'Dodaj/usuń' },
         { cryptocurrency: 'BitCoin3', details: 'Dodaj/usuń' },
         { cryptocurrency: 'BitCoin4', details: 'Dodaj/usuń' }
-      ]
+      ],
+      cryptocurrecyDetails: []
+    }
+  },
+  created () {
+    this.fetchData()
+  },
+  methods: {
+    async fetchData () {
+      this.cryptocurrecyDetails = await ApiService.getCryptocurrencyInfo(CryptocurrencyConsts.CRYPTOCURRENCIES.BTC, CryptocurrencyConsts.CURRENCIES.PLN, 'market')
     }
   }
 }
