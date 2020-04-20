@@ -28,4 +28,5 @@ export class CryptocurrencyConsts {
   public static BCP: string = "BCP";
   public static XLM: string = "XLM";
   public static ALG: string = "ALG";
+  public static CRYPTO_ARRAY_PLN: string[] = ['BTC-PLN', 'ETH-PLN', 'LSK-PLN', 'LTC-PLN', 'GAME-PLN', 'DASH-PLN', 'BCC-PLN', 'BTG-PLN', 'KZC-PLN', 'XIN-PLN', 'XRP-PLN', 'ZEC-PLN', 'GNT-PLN', 'OMG-PLN', 'FTO-PLN', 'ZRX-PLN', 'PAY-PLN', 'BAT-PLN', 'REP-PLN', 'NEU-PLN', 'TRX-PLN', 'AMLT-PLN', 'EXY-PLN', 'BOB-PLN', 'LML-PLN', 'BSV-PLN', 'BCP-PLN', 'XLM-PLN', 'ALG-PLN', ]
 }
