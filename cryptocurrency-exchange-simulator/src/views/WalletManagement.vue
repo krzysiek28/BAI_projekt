@@ -5,10 +5,13 @@
 </template>
 
 <script>
+import TransactionHistory from '../components/wallet/TransactionHistory'
 export default {
-  name: 'WalletManagement'
+  name: 'TransactionHistory',
+  componenets: {
+    TransactionHistory
+  }
 }
 </script>
-
 <style scoped>
 </style>
