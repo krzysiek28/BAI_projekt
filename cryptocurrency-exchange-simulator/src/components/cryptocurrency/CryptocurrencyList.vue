@@ -1,19 +1,18 @@
 <template>
   <div class="cryptocurrencyList">
     <b-container class="bv-example-row">
-      <b-row v-for="dataItem in cryptocurrecyDetails" :key="dataItem.cryptocurrency">
+      <b-row v-for="dataItem in this.cryptocurrecyDetails" :key="dataItem.cryptocurrency">
         <cryptocurrency-row :cryptocurrencyInfo="dataItem"/>
       </b-row>
     </b-container>
   </div>
 </template>
 
-<script>
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { CryptocurrencyInfo } from '@/models/CryptocurrencyInfo'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
 import { ApiService, OperationType } from '@/services/api.service'
 import { CryptocurrencyConsts } from '@/constants/cryptocurrency.constants'
-import CryptocurrencyRow from '@/components/cryptocurrency/CryptocurrencyRow'
+import CryptocurrencyRow from '@/components/cryptocurrency/CryptocurrencyRow.vue'
 
 @Component({
   components: {
@@ -30,13 +29,13 @@ export default class CryptocurrencyList extends Vue {
 
   apiData = [];
 
-  constructor (props) {
-    super(props)
+  constructor () {
+    super()
     this.fetchData()
   }
 
-  fetchData () {
-    this.apiData = ApiService.getCryptocurrencyInfo(CryptocurrencyConsts.CRYPTOCURRENCIES.BTC, CryptocurrencyConsts.CURRENCIES.PLN, OperationType.MARKET)
+  async fetchData () {
+    this.apiData = await ApiService.getCryptocurrencyInfo(CryptocurrencyConsts.CRYPTOCURRENCIES.BTC, CryptocurrencyConsts.CURRENCIES.PLN, OperationType.MARKET)
   }
 }
 </script>
