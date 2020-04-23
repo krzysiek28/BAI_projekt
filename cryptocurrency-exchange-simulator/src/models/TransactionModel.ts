@@ -1,7 +1,5 @@
 export interface TransactionModel {
-  price: number;
   date: Date;
-  rate: number;
   amount: number;
   bidPrice: number;
   askPrice: number;
