@@ -22,7 +22,7 @@
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-            <button v-on:click="addBalance()">Add Balance</button>
+            <button v-on:click="refresh()">Refresh</button>
             <b-nav-text :key="availableBalance">
               SALDO: {{availableBalance}} $
             </b-nav-text>
@@ -49,8 +49,7 @@ export default class ManagementPanel extends Vue {
     this.availableBalance = StorageService.balance
   }
 
-  addBalance () {
-    StorageService.addToBalance()
+  refresh () {
     this.availableBalance = StorageService.balance
   }
 }
