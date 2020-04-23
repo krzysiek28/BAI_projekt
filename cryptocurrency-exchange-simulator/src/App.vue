@@ -16,7 +16,7 @@
 }
 </style>
 <script>
-import ManagementPanel from '@/components/wallet/ManagementPanel'
+import ManagementPanel from '@/components/panel/ManagementPanel'
 import Vue from 'vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'

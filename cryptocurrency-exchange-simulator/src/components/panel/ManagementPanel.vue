@@ -22,8 +22,9 @@
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
+            <button v-on:click="addBalance">Add Balance</button>
             <b-nav-text>
-              SALDO: 0.00$
+              SALDO: {{availableBalance}} $
             </b-nav-text>
           </b-navbar-nav>
 
@@ -34,8 +35,30 @@
 </template>
 
 <script>
+import { StorageService } from '@/services/storage.service'
+
 export default {
-  name: 'ManagementPanel'
+  name: 'ManagementPanel',
+  data () {
+    return {
+      availableBalance: 0,
+      investedMoney: 0,
+      profit: 0
+    }
+  },
+  created () {
+    this.getBalance()
+  },
+  methods: {
+    getBalance () {
+      this.availableBalance = StorageService.balance
+    },
+
+    addBalance () {
+      StorageService.addToBalance()
+      this.availableBalance = StorageService.balance
+    }
+  }
 }
 </script>
 
