@@ -1,8 +1,30 @@
-<template></template>
+<template>
+  <div class="TransactionHistory">
+    <h4>Historia zakupionych kryptowalut:</h4>
+    <b-container class="bv-example-row">
+      <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
+        <b-col>
+          <b-table striped hover :items="this.transactionHistory" >
+          </b-table>
+        </b-col>
+      </b-row>
+    </b-container>
+  </div>
+</template>
 
-<script>
-export default {
-  name: 'TransactionHistory'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import { TransactionModel } from '../../models/TransactionModel'
+import { StorageService } from '../../services/storage.service'
+
+@Component
+export default class TransactionHistory extends Vue {
+  private transactionHistory!: Array<TransactionModel>;
+
+  constructor () {
+    super()
+    this.transactionHistory = StorageService.transactionHistory
+  }
 }
 </script>
 

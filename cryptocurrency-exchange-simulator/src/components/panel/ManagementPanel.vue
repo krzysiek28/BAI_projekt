@@ -22,8 +22,8 @@
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-            <button v-on:click="addBalance">Add Balance</button>
-            <b-nav-text>
+            <button v-on:click="addBalance()">Add Balance</button>
+            <b-nav-text :key="availableBalance">
               SALDO: {{availableBalance}} $
             </b-nav-text>
           </b-navbar-nav>
@@ -34,30 +34,24 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
 import { StorageService } from '@/services/storage.service'
 
-export default {
-  name: 'ManagementPanel',
-  data () {
-    return {
-      availableBalance: 0,
-      investedMoney: 0,
-      profit: 0
-    }
-  },
-  created () {
-    this.getBalance()
-  },
-  methods: {
-    getBalance () {
-      this.availableBalance = StorageService.balance
-    },
+@Component
+export default class ManagementPanel extends Vue {
+  availableBalance: number;
+  // investedMoney: number;
+  // profit: number;
 
-    addBalance () {
-      StorageService.addToBalance()
-      this.availableBalance = StorageService.balance
-    }
+  constructor () {
+    super()
+    this.availableBalance = StorageService.balance
+  }
+
+  addBalance () {
+    StorageService.addToBalance()
+    this.availableBalance = StorageService.balance
   }
 }
 </script>
