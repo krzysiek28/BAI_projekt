@@ -1,19 +1,21 @@
 import {TransactionStatus} from "@/models/TransactionModel";
 <script src="../../models/TransactionModel.ts"></script>
 <template>
-  <div class="cryptocurrencyRow">
-    <b-col>{{ cryptocurrencyDetailsModel.cryptocurrency }}</b-col>
-    <b-col>{{ cryptocurrencyDetailsModel.tickerModel.bid }}</b-col>
-    <b-col>{{ cryptocurrencyDetailsModel.tickerModel.ask }}</b-col>
-    <b-col>
-      <b-button v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'buy-modal'" variant="success">Kup</b-button>
-    </b-col>
-    <b-col>
-      <b-button v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'sell-modal'" variant="danger">Sprzedaj</b-button>
-    </b-col>
-    <b-col>
-      <b-button v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'details-modal'" variant="outline-primary">Szczegóły</b-button>
-    </b-col>
+  <b-container class="cryptoContainer">
+    <b-row align-h="center">
+      <b-col cols="6" sm="2" md="1">Name:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.cryptocurrency }} </b></b-col>
+      <b-col cols="6" sm="2" md="1">BID:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.tickerModel.bid }} </b></b-col>
+      <b-col cols="6" sm="2" md="1">ASK:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.tickerModel.ask }} </b></b-col>
+      <b-col>
+        <b-button cols="6" sm="4" md="2" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'buy-modal'" variant="success">Kup</b-button>
+      </b-col>
+      <b-col>
+        <b-button cols="6" sm="4" md="2" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'sell-modal'" variant="danger">Sprzedaj</b-button>
+      </b-col>
+      <b-col>
+        <b-button cols="12" sm="4" md="2" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'details-modal'" variant="outline-primary">Szczegóły</b-button>
+      </b-col>
+    </b-row>
 
     <b-modal v-bind:id="this.cryptocurrencyDetailsModel.cryptocurrency + 'buy-modal'"
              title="Kupno kryptowaluty"
@@ -48,7 +50,7 @@ import {TransactionStatus} from "@/models/TransactionModel";
     <b-modal v-bind:id="this.cryptocurrencyDetailsModel.cryptocurrency + 'details-modal'" title="Szczegóły">
       <cryptocurrency-details></cryptocurrency-details>
     </b-modal>
-  </div>
+  </b-container>
 </template>
 
 <script lang="ts">
@@ -97,5 +99,20 @@ export default class CryptocurrencyRow extends Vue {
 </script>
 
 <style scoped>
+
+.cryptoContainer{
+    border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+}
+
+.cryptoContainer div{
+  padding: 5px;
+}
+.cryptoContainer div div{
+  align-self:center
+}
+
+.cryptoContainer div div div{
+  justify-content: start;
+}
 
 </style>
