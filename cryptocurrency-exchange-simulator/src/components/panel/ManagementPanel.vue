@@ -24,7 +24,7 @@
           <b-navbar-nav class="ml-auto">
             <button v-on:click="refresh()">Refresh</button>
             <b-nav-text :key="availableBalance">
-              SALDO: {{availableBalance}} $
+              SALDO: {{availableBalance.toFixed(2)}} $
             </b-nav-text>
           </b-navbar-nav>
 
