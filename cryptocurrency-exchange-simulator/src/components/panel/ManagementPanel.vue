@@ -3,7 +3,7 @@
     <div id="nav">
 
       <b-navbar toggleable="lg" type="dark" variant="dark">
-        <b-navbar-brand href="#">KryptoSym</b-navbar-brand>
+        <b-navbar-brand href="#">CryptoSim</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -23,7 +23,7 @@
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
             <b-nav-text :key="availableBalance" class="pt-0-mr-4">
-              SALDO: {{availableBalance.toFixed(2)}} $
+              Balance: {{availableBalance.toFixed(2)}} $
             </b-nav-text>
           </b-navbar-nav>
           <b-button v-on:click="refresh()" variant="secondary">Refresh</b-button>
