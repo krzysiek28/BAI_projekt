@@ -29,16 +29,20 @@ export default class CryptocurrencyList extends Vue {
   constructor () {
     super()
     this.followedList = StorageService.followedCryptocurrencies
-    this.fetchCryptocurrenciesData(this.followedList)
+  }
+
+  async mounted () {
+    this.cryptocurrencyDataList = await this.fetchCryptocurrenciesData(this.followedList)
   }
 
   async fetchCryptocurrenciesData (cryptocurrencyFollowedList: Array<string>) {
     let cryptocurrenciesDataList = []
     for (const cryptocurrency of cryptocurrencyFollowedList) {
       const cryptocurrencyDetails = await ApiService.getCryptocurrencyInfo(cryptocurrency.toUpperCase(), CryptocurrencyConsts.CURRENCIES.PLN, OperationType.TICKER)
-      cryptocurrenciesDataList.push({ cryptocurrency: cryptocurrency, tickerModel: cryptocurrencyDetails })
+      const ownedAmount = StorageService.getCryptocurrencyAmount(cryptocurrency)
+      cryptocurrenciesDataList.push({ cryptocurrency: cryptocurrency, ownedAmount: ownedAmount, tickerModel: cryptocurrencyDetails })
     }
-    this.cryptocurrencyDataList = cryptocurrenciesDataList
+    return cryptocurrenciesDataList
   }
 }
 </script>

@@ -6,6 +6,7 @@ import {TransactionStatus} from "@/models/TransactionModel";
       <b-col cols="6" sm="2" md="1">Name:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.cryptocurrency }} </b></b-col>
       <b-col cols="6" sm="2" md="1">BID:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.tickerModel.bid }} </b></b-col>
       <b-col cols="6" sm="2" md="1">ASK:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.tickerModel.ask }} </b></b-col>
+      <b-col cols="6" sm="2" md="1">Owned amount:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.ownedAmount }} </b></b-col>
       <b-col>
         <b-button cols="6" sm="4" md="2" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'buy-modal'" variant="success">Kup</b-button>
       </b-col>
@@ -22,7 +23,7 @@ import {TransactionStatus} from "@/models/TransactionModel";
              @ok="handleBuyCryptocurrency">
 
       <p>kryptowaluta: {{this.cryptocurrencyDetailsModel.cryptocurrency}}</p>
-      <p>cena kupna: {{this.cryptocurrencyDetailsModel.tickerModel.bid}}
+      <p>cena kupna: {{this.cryptocurrencyDetailsModel.tickerModel.bid}}</p>
 
       <form ref="form" @submit.stop.prevent="submitBuyingCryptocurrency">
         <b-form-group
@@ -44,8 +45,35 @@ import {TransactionStatus} from "@/models/TransactionModel";
       </template>
 <!--      <cryptocurrency-transaction-buy></cryptocurrency-transaction-buy>-->
     </b-modal>
-    <b-modal v-bind:id="this.cryptocurrencyDetailsModel.cryptocurrency + 'sell-modal'" title="Sprzedaj">
-      <cryptocurrency-transaction-sell></cryptocurrency-transaction-sell>
+    <b-modal v-bind:id="this.cryptocurrencyDetailsModel.cryptocurrency + 'sell-modal'"
+           title="Kupno kryptowaluty"
+           @ok="handleSellCryptocurrency">
+
+    <p>kryptowaluta: {{this.cryptocurrencyDetailsModel.cryptocurrency}}</p>
+    <p>cena sprzedaży: {{this.cryptocurrencyDetailsModel.tickerModel.ask}}</p>
+    <p>posiadana ilość: {{this.cryptocurrencyDetailsModel.ownedAmount}}</p>
+    <p></p>
+
+    <form ref="form" @submit.stop.prevent="submitSellingCryptocurrency">
+      <b-form-group
+        label="Ilość"
+        label-for="amount-input"
+        invalid-feedback="Nie podano wartości!"
+      >
+        <b-form-input
+          id="amount-input"
+          v-model="amount"
+          required
+        ></b-form-input>
+      </b-form-group>
+    </form>
+
+    <template v-slot:modal-footer="{ ok, cancel }">
+      <b-button size="sm" variant="success" @click="ok()">Sprzedaj</b-button>
+      <b-button size="sm" variant="danger" @click="cancel()">Anuluj</b-button>
+    </template>
+
+<!--      <cryptocurrency-transaction-sell></cryptocurrency-transaction-sell>-->
     </b-modal>
     <b-modal v-bind:id="this.cryptocurrencyDetailsModel.cryptocurrency + 'details-modal'" title="Szczegóły">
       <cryptocurrency-details v-bind:cryptocurrency=this.cryptocurrencyDetailsModel.cryptocurrency></cryptocurrency-details>
@@ -69,6 +97,11 @@ export default class CryptocurrencyRow extends Vue {
   @Prop() private cryptocurrencyDetailsModel!: CryptocurrencyDetailsModel;
   amount: number = 0;
 
+  /*
+      BUYING MODAL HANDLING
+      Move to component if possible
+  */
+
   handleBuyCryptocurrency (bvModalEvent: Event) {
     bvModalEvent.preventDefault()
     this.submitBuyingCryptocurrency()
@@ -79,6 +112,7 @@ export default class CryptocurrencyRow extends Vue {
 
     // execute Action
     this.buyCryptocurrency()
+    this.reloadData()
     // Hide the modal manually
     // this.$nextTick(() => {
     //   this.$bvModal.hide('modal-prevent-closing')
@@ -94,6 +128,42 @@ export default class CryptocurrencyRow extends Vue {
       status: TransactionStatus.BOUGHT, cryptocurrency:
       this.cryptocurrencyDetailsModel.cryptocurrency
     })
+  }
+
+  /*
+      SELLING MODAL HANDLING
+      Move to component if possible
+  */
+  handleSellCryptocurrency (bvModalEvent: Event) {
+    bvModalEvent.preventDefault()
+    this.submitSellingCryptocurrency()
+  }
+
+  submitSellingCryptocurrency () {
+    // validate + check available balance StorageService.balance > bid_price * amount
+
+    // execute Action
+    this.sellCryptocurrency()
+    this.reloadData()
+    // Hide the modal manually
+    // this.$nextTick(() => {
+    //   this.$bvModal.hide('modal-prevent-closing')
+    // })
+  }
+
+  sellCryptocurrency () {
+    StorageService.sellCryptocurrency({
+      date: new Date(),
+      amount: this.amount,
+      bidPrice: this.cryptocurrencyDetailsModel.tickerModel.bid,
+      askPrice: this.cryptocurrencyDetailsModel.tickerModel.ask,
+      status: TransactionStatus.BOUGHT, cryptocurrency:
+      this.cryptocurrencyDetailsModel.cryptocurrency
+    })
+  }
+
+  reloadData () {
+    this.cryptocurrencyDetailsModel.ownedAmount = StorageService.getCryptocurrencyAmount(this.cryptocurrencyDetailsModel.cryptocurrency)
   }
 }
 </script>
