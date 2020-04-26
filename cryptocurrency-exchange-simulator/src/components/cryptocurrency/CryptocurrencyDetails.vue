@@ -1,7 +1,7 @@
 <template>
     <div class="cryptocurrencyDetails">
-      <div>Data for CryptoBuyGraph: {{this.buyGraphData}}</div>
-      <div>Data for CryptoSellGraph: {{this.sellGraphData}}</div>
+      <canvas id="cryptocurrency-buy-chart"></canvas>
+      <canvas id="cryptocurrency-sell-chart"></canvas>
     </div>
 </template>
 
@@ -9,37 +9,98 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { ApiService, OperationType } from '@/services/api.service'
 import { CryptocurrencyConsts } from '@/constants/cryptocurrency.constants'
-import { CryptoGraphModel } from '@/models/CryptoGraphModel'
 
-@Component
+import Chart from 'chart.js'
+import { CryptocurrencyTradeModel } from '@/models/CryptocurrencyTradeModel'
+
+@Component({
+})
+
 export default class CryptocurrencyDetails extends Vue {
-@Prop()
-cryptocurrency!: string;
+  @Prop()
+  cryptocurrency!: string;
 
-private buyGraphData: Array<CryptoGraphModel> = [];
-private sellGraphData: Array<CryptoGraphModel> = [];
+  async mounted () {
+    const tradeData: Array<CryptocurrencyTradeModel> = await this.fetchTradeData()
+    this.createBuyChartObject(tradeData)
+  }
 
-constructor () {
-  super()
-  this.fetchCryptocurrenciesDataForGraph(this.cryptocurrency)
-  // this.sortGraphData(this.graphData)
-}
+  async fetchTradeData (): Promise<Array<CryptocurrencyTradeModel>> {
+    return await ApiService.getCryptocurrencyInfo(this.cryptocurrency.toUpperCase(), CryptocurrencyConsts.CURRENCIES.PLN, OperationType.TRADES)
+  }
 
-// get data from prop and api
-async fetchCryptocurrenciesDataForGraph (cryptoCurrency: string) {
-  const graphData = await ApiService.getCryptocurrencyInfo(cryptoCurrency.toUpperCase(), CryptocurrencyConsts.CURRENCIES.PLN, OperationType.TRADES)
-  console.log(graphData)
-  this.sortGraphData(graphData)
-  console.log(this.buyGraphData)
-  console.log(this.sellGraphData)
-}
+  async createBuyChartObject (trades: Array<CryptocurrencyTradeModel>) {
+    const labels: string[] = []
+    const data: number[] = []
+    const buyChartData = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Kupno',
+          backgroundColor: '#2E8B57',
+          data: data
+        }
+      ]
+    }
 
-sortGraphData (cryptoData: Array<CryptoGraphModel>) {
-  cryptoData.forEach(element => {
-    if (element.type === 'buy') this.buyGraphData.push(element)
-    else if (element.type === 'sell') this.sellGraphData.push(element)
-  })
-}
+    const sellChartData = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Sprzedaż',
+          backgroundColor: '#f87979',
+          data: data
+        }
+      ]
+    }
+
+    trades.forEach(trade => {
+      if (trade.type === 'buy') {
+        buyChartData.labels.push(this.parseDate(trade.date))
+        buyChartData.datasets[0].data.push(trade.price)
+      } else if (trade.type === 'sell') {
+        sellChartData.labels.push(this.parseDate(trade.date))
+        sellChartData.datasets[0].data.push(trade.price)
+      }
+    })
+
+    this.createChart('cryptocurrency-buy-chart', buyChartData)
+    this.createChart('cryptocurrency-sell-chart', sellChartData)
+  }
+
+  parseDate (date: number) {
+    const d = new Date(date * 1000)
+    const temp = this.praseZero(d.getDate()) + '.' + this.praseZero(d.getMonth()) + '.' + this.praseZero(d.getFullYear())
+    return temp
+  }
+
+  praseZero (x: number) {
+    if (x < 10) {
+      return '0' + x
+    }
+    else {
+      return x
+    }
+  }
+
+  createChart (chartId: string, chartData: any) {
+    const ctx = document.getElementById(chartId) as HTMLCanvasElement
+    const myChart = new Chart(ctx, {
+      type: 'line',
+      data: chartData,
+      options: {
+        responsive: true,
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              padding: 25
+            }
+          }]
+        }
+      }
+    })
+  }
 }
 </script>
 

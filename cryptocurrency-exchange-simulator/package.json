@@ -10,12 +10,16 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@types/chart.js": "^2.9.19",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.11.0",
     "chart": "^0.1.2",
+    "chart.js": "^2.9.3",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
+    "vue-chartjs": "^3.5.0",
     "vue-class-component": "^7.2.3",
+    "vue-google-charts": "^0.3.2",
     "vue-mc": "^0.6.0",
     "vue-property-decorator": "^8.4.1",
     "vue-router": "^3.1.6",
