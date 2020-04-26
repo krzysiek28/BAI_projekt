@@ -89,6 +89,7 @@ import {TransactionStatus} from "@/models/TransactionModel";
   import CryptocurrencyDetails from '@/components/cryptocurrency/CryptocurrencyDetails.vue'
   import CryptocurrencyTransactionSell from '@/components/cryptocurrency/CryptocurrencyTransactionSell.vue'
   import { CryptocurrencyDetailsModel } from '@/models/CryptocurrencyDetailsModel'
+  import { FormDatepickerPlugin } from 'bootstrap-vue'
 
   @Component({
   components: { CryptocurrencyTransactionSell, CryptocurrencyDetails, CryptocurrencyTransactionBuy }
