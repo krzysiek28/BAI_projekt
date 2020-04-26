@@ -13,9 +13,9 @@ export class StorageService {
   private static _ownedCryptocurrencies: Array<CryptocurrencyAmountModel> = []
 
   public static buyCryptocurrency (transactionModel: TransactionModel) {
-    if (this.hasEnoughMoneyForTransaction(transactionModel.bidPrice, transactionModel.amount)) {
-      throw new Error('not enough money')
-    }
+    // if (this.hasEnoughMoneyForTransaction(transactionModel.bidPrice, transactionModel.amount)) {
+    //   throw new Error('not enough money')
+    // }
     this.handleBoughtCryptocurrency(transactionModel)
     this._transactionHistory.push(transactionModel)
   }
