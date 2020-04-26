@@ -47,6 +47,16 @@ export class StorageService {
       throw new Error('not enough cryptocurrency owned')
     } else {
       cryptocurrencyAmount.amount = +cryptocurrencyAmount.amount - +transactionModel.amount
+      this.removeElementIfAmountEqualZero(cryptocurrencyAmount)
+    }
+  }
+
+  private static removeElementIfAmountEqualZero (cryptocurrencyAmount: CryptocurrencyAmountModel) {
+    if (+cryptocurrencyAmount.amount === 0) {
+      const index = this._ownedCryptocurrencies.indexOf(cryptocurrencyAmount, 0)
+      if (index > -1) {
+        this._ownedCryptocurrencies.splice(index, 1)
+      }
     }
   }
 
@@ -54,13 +64,13 @@ export class StorageService {
     this._balance = this._balance + askPrice * amount
   }
 
-  public static getCryptocurrencyAmount (cryptocurrency: string) {
-    const amount = this._ownedCryptocurrencies.filter(entry => {
+  public static getCryptocurrencyAmount (cryptocurrency: string): number {
+    const ownedCryptocurrency = this._ownedCryptocurrencies.find(entry => {
       if (entry.cryptocurrency === cryptocurrency) {
-        return entry.amount
+        return entry
       }
     })
-    return amount !== undefined ? amount : 0
+    return ownedCryptocurrency !== undefined ? +ownedCryptocurrency.amount : 0
   }
 
   public static hasEnoughMoneyForTransaction (price: number, amount: number) {
