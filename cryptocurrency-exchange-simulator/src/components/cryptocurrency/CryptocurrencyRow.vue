@@ -123,10 +123,11 @@ export default class CryptocurrencyRow extends Vue {
     StorageService.buyCryptocurrency({
       date: new Date(),
       amount: this.amount,
+      price: -(+this.amount * +this.cryptocurrencyDetailsModel.tickerModel.ask),
       bidPrice: this.cryptocurrencyDetailsModel.tickerModel.bid,
       askPrice: this.cryptocurrencyDetailsModel.tickerModel.ask,
-      status: TransactionStatus.BOUGHT, cryptocurrency:
-      this.cryptocurrencyDetailsModel.cryptocurrency
+      status: TransactionStatus.BOUGHT,
+      cryptocurrency: this.cryptocurrencyDetailsModel.cryptocurrency
     })
   }
 
@@ -155,10 +156,11 @@ export default class CryptocurrencyRow extends Vue {
     StorageService.sellCryptocurrency({
       date: new Date(),
       amount: this.amount,
+      price: +this.amount * +this.cryptocurrencyDetailsModel.tickerModel.bid,
       bidPrice: this.cryptocurrencyDetailsModel.tickerModel.bid,
       askPrice: this.cryptocurrencyDetailsModel.tickerModel.ask,
-      status: TransactionStatus.BOUGHT, cryptocurrency:
-      this.cryptocurrencyDetailsModel.cryptocurrency
+      status: TransactionStatus.SOLD,
+      cryptocurrency: this.cryptocurrencyDetailsModel.cryptocurrency
     })
   }
 
