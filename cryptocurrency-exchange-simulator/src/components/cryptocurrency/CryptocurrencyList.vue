@@ -33,7 +33,7 @@ export default class CryptocurrencyList extends Vue {
   }
 
   async fetchCryptocurrenciesData (cryptocurrencyFollowedList: Array<string>) {
-    let cryptocurrenciesDataList = []
+    const cryptocurrenciesDataList = []
     for (const cryptocurrency of cryptocurrencyFollowedList) {
       const cryptocurrencyDetails = await ApiService.getCryptocurrencyInfo(cryptocurrency.toUpperCase(), CryptocurrencyConsts.CURRENCIES.PLN, OperationType.TICKER)
       cryptocurrenciesDataList.push({ cryptocurrency: cryptocurrency, tickerModel: cryptocurrencyDetails })
