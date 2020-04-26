@@ -1,4 +1,4 @@
-import { TransactionModel } from '@/models/TransactionModel'
+import { TransactionModel, TransactionStatus } from '@/models/TransactionModel'
 import { CryptocurrencyAmountModel } from '@/models/CryptocurrencyAmountModel'
 import { ALL_CRYPTOCURRENCIES } from '@/constants/cryptocurrency.constants'
 
@@ -6,8 +6,6 @@ const defaultBalance = 50000
 
 export class StorageService {
   private static _balance: number = defaultBalance
-  private static _investedMoney = 62
-  private static _profit = 34
   private static _followedCryptocurrencyList: Array<string> = ['BTC', 'ETH', 'LSK', 'LTC']
   private static _transactionHistory: Array<TransactionModel> = []
   private static _ownedCryptocurrencies: Array<CryptocurrencyAmountModel> = []
@@ -88,10 +86,32 @@ export class StorageService {
     this._followedCryptocurrencyList.push(cryptocurrency)
   }
 
+  public static calculateProfit (): number {
+    let profit = 0
+    this._transactionHistory.forEach(element => {
+      if (element.status === TransactionStatus.SOLD) {
+        profit = profit + element.price
+      }
+    })
+    return profit
+  }
+
+  public static calculateInvestedMoney (): number {
+    let investedMoney = 0
+    this._transactionHistory.forEach(element => {
+      if (element.status === TransactionStatus.BOUGHT) {
+        investedMoney = investedMoney + element.price
+      }
+    })
+    return investedMoney
+  }
+
+  public static calculateTotalIncomeOrLoss (): number {
+    return this.calculateProfit() + this.calculateInvestedMoney()
+  }
+
   public static reset () {
     this._balance = defaultBalance
-    this._investedMoney = 0
-    this._profit = 0
     this._transactionHistory = []
     this._ownedCryptocurrencies = []
   }
@@ -102,14 +122,6 @@ export class StorageService {
 
   public static get balance () {
     return this._balance
-  }
-
-  public static get investedMoney () {
-    return this._investedMoney
-  }
-
-  public static get profit () {
-    return this._profit
   }
 
   public static get transactionHistory () {

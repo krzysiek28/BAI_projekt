@@ -2,19 +2,24 @@
   <div class="balanceInfo">
     <b-card no-body class="overflow-hidden" style="max-width: 540px;">
       <b-row no-gutters>
-        <b-col md="4">
+        <b-col md="3">
           <b-card-body title="Balance">
-            <b-card-text>{{this.balance}}</b-card-text>
+            <b-card-text>{{this.balance.toFixed(2)}}</b-card-text>
           </b-card-body>
         </b-col>
-        <b-col md="4">
+        <b-col md="3">
           <b-card-body title="Profit">
-            <b-card-text>{{this.profit}}</b-card-text>
+            <b-card-text>{{this.profit.toFixed(2)}}</b-card-text>
           </b-card-body>
         </b-col>
-        <b-col md="4">
+        <b-col md="3">
           <b-card-body title="Invested money">
-            <b-card-text>{{this.investedMoney}}</b-card-text>
+            <b-card-text>{{this.investedMoney.toFixed(2)}}</b-card-text>
+          </b-card-body>
+        </b-col>
+        <b-col md="3">
+          <b-card-body title="Income or loss">
+            <b-card-text>{{this.incomeOrLoss.toFixed(2)}}</b-card-text>
           </b-card-body>
         </b-col>
       </b-row>
@@ -43,13 +48,15 @@ export default class BalanceInfo extends Vue {
   balance!: number;
   investedMoney!: number;
   profit!: number;
+  incomeOrLoss!: number;
   ownedCryptocurrencies!: Array<CryptocurrencyAmountModel>;
 
   constructor () {
     super()
     this.balance = StorageService.balance
-    this.investedMoney = StorageService.investedMoney
-    this.profit = StorageService.profit
+    this.investedMoney = StorageService.calculateInvestedMoney()
+    this.profit = StorageService.calculateProfit()
+    this.incomeOrLoss = StorageService.calculateTotalIncomeOrLoss()
     this.ownedCryptocurrencies = StorageService.ownedCryptocurrencies
   }
 }
