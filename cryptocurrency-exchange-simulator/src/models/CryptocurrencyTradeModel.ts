@@ -1,5 +1,5 @@
 export interface CryptocurrencyTradeModel {
-  date: Date;
+  date: number;
   price: number;
   type: string;
   amount: number;

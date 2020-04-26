@@ -1,6 +1,5 @@
 <template>
     <div class="cryptocurrencyDetails">
-<!--       <line v-bind:chartdata="buyChartData"/>-->
       <canvas id="cryptocurrency-buy-chart"></canvas>
       <canvas id="cryptocurrency-sell-chart"></canvas>
     </div>
@@ -31,13 +30,13 @@ export default class CryptocurrencyDetails extends Vue {
   }
 
   async createBuyChartObject (trades: Array<CryptocurrencyTradeModel>) {
-    const labels: Date[] = []
+    const labels: string[] = []
     const data: number[] = []
     const buyChartData = {
       labels: labels,
       datasets: [
         {
-          label: 'Buy',
+          label: 'Kupno',
           backgroundColor: '#f87979',
           data: data
         }
@@ -48,7 +47,7 @@ export default class CryptocurrencyDetails extends Vue {
       labels: labels,
       datasets: [
         {
-          label: 'Sell',
+          label: 'Sprzedaż',
           backgroundColor: '#f87979',
           data: data
         }
@@ -57,18 +56,31 @@ export default class CryptocurrencyDetails extends Vue {
 
     trades.forEach(trade => {
       if (trade.type === 'buy') {
-        buyChartData.labels.push(trade.date)
+        buyChartData.labels.push(this.parseDate(trade.date))
         buyChartData.datasets[0].data.push(trade.price)
-        // this.buyGraphData.push([element.date, element.price, element.amount])
       } else if (trade.type === 'sell') {
-        sellChartData.labels.push(trade.date)
+        sellChartData.labels.push(this.parseDate(trade.date))
         sellChartData.datasets[0].data.push(trade.price)
-        // this.sellGraphData.push([element.date, element.price, element.amount])
       }
     })
 
     this.createChart('cryptocurrency-buy-chart', buyChartData)
     this.createChart('cryptocurrency-sell-chart', sellChartData)
+  }
+
+  parseDate (date: number) {
+    const d = new Date(date * 1000)
+    const temp = this.praseZero(d.getDate()) + '.' + this.praseZero(d.getMonth()) + '.' + this.praseZero(d.getFullYear())
+    return temp
+  }
+
+  praseZero (x: number) {
+    if (x < 10) {
+      return '0' + x
+    }
+    else {
+      return x
+    }
   }
 
   createChart (chartId: string, chartData: any) {
