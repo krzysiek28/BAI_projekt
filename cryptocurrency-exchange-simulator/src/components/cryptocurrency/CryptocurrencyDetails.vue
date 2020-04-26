@@ -12,6 +12,7 @@ import { CryptocurrencyConsts } from '@/constants/cryptocurrency.constants'
 
 import Chart from 'chart.js'
 import { CryptocurrencyTradeModel } from '@/models/CryptocurrencyTradeModel'
+import { CryptocurrencyAllModel } from '@/models/CryptocurrencyAllModel'
 
 @Component({
 })
@@ -21,48 +22,55 @@ export default class CryptocurrencyDetails extends Vue {
   cryptocurrency!: string;
 
   async mounted () {
-    const tradeData: Array<CryptocurrencyTradeModel> = await this.fetchTradeData()
-    this.createBuyChartObject(tradeData)
+    const tradeData: CryptocurrencyAllModel = await this.fetchTradeData()
+    this.createBuyChartObject(tradeData.transactions)
   }
 
-  async fetchTradeData (): Promise<Array<CryptocurrencyTradeModel>> {
-    return await ApiService.getCryptocurrencyInfo(this.cryptocurrency.toUpperCase(), CryptocurrencyConsts.CURRENCIES.PLN, OperationType.TRADES)
+  async fetchTradeData (): Promise<CryptocurrencyAllModel> {
+    const x = await  ApiService.getCryptocurrencyInfo(this.cryptocurrency.toUpperCase(), CryptocurrencyConsts.CURRENCIES.PLN, OperationType.ALL)
+    console.log(x.transactions)
+    return x
   }
 
   async createBuyChartObject (trades: Array<CryptocurrencyTradeModel>) {
-    const labels: string[] = []
-    const data: number[] = []
+    const buyLabels: string[] = []
+    const buyData: number[] = []
+    const sellLabels: string[] = []
+    const sellData: number[] = []
     const buyChartData = {
-      labels: labels,
+      labels: buyLabels,
       datasets: [
         {
           label: 'Kupno',
           backgroundColor: '#2E8B57',
-          data: data
+          data: buyData
         }
       ]
     }
 
     const sellChartData = {
-      labels: labels,
+      labels: sellLabels,
       datasets: [
         {
           label: 'Sprzedaż',
           backgroundColor: '#f87979',
-          data: data
+          data: sellData
         }
       ]
     }
 
     trades.forEach(trade => {
+      console.log(trade.type)
       if (trade.type === 'buy') {
-        buyChartData.labels.push(this.parseDate(trade.date))
-        buyChartData.datasets[0].data.push(trade.price)
+        buyLabels.push(this.parseDate(trade.date))
+        buyData.push(trade.price)
       } else if (trade.type === 'sell') {
-        sellChartData.labels.push(this.parseDate(trade.date))
-        sellChartData.datasets[0].data.push(trade.price)
+        sellLabels.push(this.parseDate(trade.date))
+        sellData.push(trade.price)
       }
     })
+    // console.log(buyChartData)
+    // console.log(sellChartData)
 
     this.createChart('cryptocurrency-buy-chart', buyChartData)
     this.createChart('cryptocurrency-sell-chart', sellChartData)
@@ -93,7 +101,7 @@ export default class CryptocurrencyDetails extends Vue {
         scales: {
           yAxes: [{
             ticks: {
-              beginAtZero: true,
+              beginAtZero: false,
               padding: 25
             }
           }]
