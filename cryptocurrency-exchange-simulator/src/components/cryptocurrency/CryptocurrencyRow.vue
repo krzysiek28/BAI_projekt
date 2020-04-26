@@ -3,10 +3,10 @@ import {TransactionStatus} from "@/models/TransactionModel";
 <template>
   <b-container class="cryptoContainer">
     <b-row align-h="center">
-      <b-col cols="6" sm="2" md="1">Name:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.cryptocurrency }} </b></b-col>
+      <b-col cols="6" sm="2" md="1">Nazwa:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.cryptocurrency }} </b></b-col>
       <b-col cols="6" sm="2" md="1">BID:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.tickerModel.bid }} </b></b-col>
       <b-col cols="6" sm="2" md="1">ASK:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.tickerModel.ask }} </b></b-col>
-      <b-col cols="6" sm="2" md="1">Owned amount:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.ownedAmount }} </b></b-col>
+      <b-col cols="6" sm="2" md="1">Posiadana kwota</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.ownedAmount }} </b></b-col>
       <b-col>
         <b-button cols="6" sm="4" md="2" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'buy-modal'" variant="success">Kup</b-button>
       </b-col>

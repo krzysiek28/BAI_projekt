@@ -1,6 +1,6 @@
 <template>
   <div class="walletManagement">
-    <H1>WALLET MANAGEMENT VIEW</H1>
+    <H1>ZARZĄDZANIE PORTFELEM</H1>
     <balance-info></balance-info>
     <transaction-history></transaction-history>
   </div>

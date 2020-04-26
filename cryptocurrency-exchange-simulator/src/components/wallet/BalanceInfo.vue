@@ -3,12 +3,12 @@
     <b-card no-body class="mx-auto" style="max-width: 540px;">
       <b-row no-gutters>
         <b-col md="6">
-          <b-card-body title="Balance">
+          <b-card-body title="Saldo">
             <b-card-text>{{this.balance.toFixed(2)}}</b-card-text>
           </b-card-body>
         </b-col>
         <b-col md="6">
-          <b-card-body title="Profit">
+          <b-card-body title="Zysk">
             <b-card-text>{{this.profit.toFixed(2)}}</b-card-text>
           </b-card-body>
         </b-col>
@@ -17,12 +17,12 @@
     <b-card no-body class="mx-auto" style="max-width: 540px;">
       <b-row no-gutters>
         <b-col md="6">
-          <b-card-body title="Invested money">
+          <b-card-body title="Zainwestowane pięniądze">
             <b-card-text>{{this.investedMoney.toFixed(2)}}</b-card-text>
           </b-card-body>
         </b-col>
         <b-col md="6">
-          <b-card-body title="Income or loss">
+          <b-card-body title="Dochód lub utrata">
             <b-card-text>{{this.incomeOrLoss.toFixed(2)}}</b-card-text>
           </b-card-body>
         </b-col>

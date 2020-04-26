@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <H1>HOME VIEW</H1>
+    <H1>STRONA GŁÓWNA</H1>
     <cryptocurrency-list></cryptocurrency-list>
 
   </div>
