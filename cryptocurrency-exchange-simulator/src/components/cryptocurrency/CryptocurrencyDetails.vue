@@ -37,7 +37,7 @@ export default class CryptocurrencyDetails extends Vue {
       datasets: [
         {
           label: 'Kupno',
-          backgroundColor: '#f87979',
+          backgroundColor: '#2E8B57',
           data: data
         }
       ]

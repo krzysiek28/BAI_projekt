@@ -47,7 +47,7 @@ import {TransactionStatus} from "@/models/TransactionModel";
     <b-modal v-bind:id="this.cryptocurrencyDetailsModel.cryptocurrency + 'sell-modal'" title="Sprzedaj">
       <cryptocurrency-transaction-sell></cryptocurrency-transaction-sell>
     </b-modal>
-      <b-modal v-bind:id="this.cryptocurrencyDetailsModel.cryptocurrency + 'details-modal'" v-bin:title="'Szczegóły dla ' + this.cryptocurrencyDetailsModel.cryptocurrency">
+      <b-modal v-bind:id="this.cryptocurrencyDetailsModel.cryptocurrency + 'details-modal'" v-bind:title="'Szczegóły dla '+cryptocurrencyDetailsModel.cryptocurrency">
       <cryptocurrency-details v-bind:cryptocurrency=this.cryptocurrencyDetailsModel.cryptocurrency></cryptocurrency-details>
     </b-modal>
   </b-container>
