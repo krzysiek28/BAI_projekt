@@ -1,88 +1,94 @@
 <template>
     <div class="cryptocurrencyDetails">
-       <line v-bind:chartdata="buyChartData"/>
+<!--       <line v-bind:chartdata="buyChartData"/>-->
+      <canvas id="cryptocurrency-buy-chart"></canvas>
+      <canvas id="cryptocurrency-sell-chart"></canvas>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { Line } from 'vue-chartjs'
 import { ApiService, OperationType } from '@/services/api.service'
 import { CryptocurrencyConsts } from '@/constants/cryptocurrency.constants'
-import { CryptoGraphModel, CryptoGraphModelView, ChartModel } from '@/models/CryptoGraphModel'
-// import CryptoChart  from '/components/cryptocurrency/CryptoGraph.js'
+
+import Chart from 'chart.js'
+import { CryptocurrencyTradeModel } from '@/models/CryptocurrencyTradeModel'
 
 @Component({
 })
 
 export default class CryptocurrencyDetails extends Vue {
-@Prop()
-cryptocurrency!: string;
+  @Prop()
+  cryptocurrency!: string;
 
-buyLoaded = false
-
-buyChartData!: any;
-sellChartData!: any;
-
-buyChartOptions!: {
-  responsive: true;
-  maintainAspectRatio: false;
-}
-
-// beforeCreate () {
-//   this.fetchCryptocurrenciesDataForGraph(this.cryptocurrency)
-// }
-
-constructor () {
-  super()
-  this.fetchCryptocurrenciesDataForGraph(this.cryptocurrency)
-}
-
-async fetchCryptocurrenciesDataForGraph (cryptoCurrency: string) {
-  const graphData = await ApiService.getCryptocurrencyInfo(cryptoCurrency.toUpperCase(), CryptocurrencyConsts.CURRENCIES.PLN, OperationType.TRADES)
-  this.sortGraphData(graphData)
-  this.buyLoaded = true
-  console.log(this.buyLoaded)
-}
-
-sortGraphData (cryptoData: Array<any>) {
-  this.buyChartData = {
-    labels: [],
-    datasets: [
-      {
-        label: 'Buy',
-        backgroundColor: '#f87979',
-        data: []
-      }
-    ]
+  async mounted () {
+    const tradeData: Array<CryptocurrencyTradeModel> = await this.fetchTradeData()
+    this.createBuyChartObject(tradeData)
   }
 
-  this.sellChartData = {
-    labels: [],
-    datasets: [
-      {
-        label: 'Sell',
-        backgroundColor: '#f87979',
-        data: []
-      }
-    ]
+  async fetchTradeData (): Promise<Array<CryptocurrencyTradeModel>> {
+    return await ApiService.getCryptocurrencyInfo(this.cryptocurrency.toUpperCase(), CryptocurrencyConsts.CURRENCIES.PLN, OperationType.TRADES)
   }
 
-  cryptoData.forEach(element => {
-    if (element.type === 'buy') {
-      this.buyChartData.labels.push(element.date)
-      this.buyChartData.datasets[0].data.push(element.price)
-      // this.buyGraphData.push([element.date, element.price, element.amount])
+  async createBuyChartObject (trades: Array<CryptocurrencyTradeModel>) {
+    const labels: Date[] = []
+    const data: number[] = []
+    const buyChartData = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Buy',
+          backgroundColor: '#f87979',
+          data: data
+        }
+      ]
     }
-    else if (element.type === 'sell') {
-      this.sellChartData.labels.push(element.date)
-      this.sellChartData.datasets[0].data.push(element.price)
-      // this.sellGraphData.push([element.date, element.price, element.amount])
+
+    const sellChartData = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Sell',
+          backgroundColor: '#f87979',
+          data: data
+        }
+      ]
     }
-  })
-  console.log(this.buyChartData)
-  console.log(this.sellChartData)
-}
+
+    trades.forEach(trade => {
+      if (trade.type === 'buy') {
+        buyChartData.labels.push(trade.date)
+        buyChartData.datasets[0].data.push(trade.price)
+        // this.buyGraphData.push([element.date, element.price, element.amount])
+      } else if (trade.type === 'sell') {
+        sellChartData.labels.push(trade.date)
+        sellChartData.datasets[0].data.push(trade.price)
+        // this.sellGraphData.push([element.date, element.price, element.amount])
+      }
+    })
+
+    this.createChart('cryptocurrency-buy-chart', buyChartData)
+    this.createChart('cryptocurrency-sell-chart', sellChartData)
+  }
+
+  createChart (chartId: string, chartData: any) {
+    const ctx = document.getElementById(chartId) as HTMLCanvasElement
+    const myChart = new Chart(ctx, {
+      type: 'line',
+      data: chartData,
+      options: {
+        responsive: true,
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              padding: 25
+            }
+          }]
+        }
+      }
+    })
+  }
 }
 </script>
 
