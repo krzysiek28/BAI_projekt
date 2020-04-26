@@ -5,6 +5,10 @@
         <cryptocurrency-row :cryptocurrencyDetailsModel="dataItem"/>
       </b-row>
     </b-container>
+
+    <b-form-select v-model="availableCryptocurrenciesToFollow.selected" :options="availableCryptocurrenciesToFollow.options"></b-form-select>
+    <b-button v-on:click="addCryptocurrencyToFollowed">Dodaj</b-button>
+    <div class="mt-3">Selected: <strong>{{ availableCryptocurrenciesToFollow.selected }}</strong></div>
   </div>
 </template>
 
@@ -24,15 +28,22 @@ import { CryptocurrencyDetailsModel } from '@/models/CryptocurrencyDetailsModel'
 export default class CryptocurrencyList extends Vue {
   cryptocurrencyDataList: Array<CryptocurrencyDetailsModel> = [];
 
-  followedList: Array<string>;
+  availableCryptocurrenciesToFollow: any;
 
   constructor () {
     super()
-    this.followedList = StorageService.followedCryptocurrencies
+    this.availableCryptocurrenciesToFollow = {
+      selected: null,
+      options: this.createSelectableData()
+    }
   }
 
   async mounted () {
-    this.cryptocurrencyDataList = await this.fetchCryptocurrenciesData(this.followedList)
+    this.cryptocurrencyDataList = await this.fetchCryptocurrenciesData(StorageService.followedCryptocurrencies)
+  }
+
+  createSelectableData () {
+    return StorageService.getAvailableCurrenciesToFollow()
   }
 
   async fetchCryptocurrenciesData (cryptocurrencyFollowedList: Array<string>) {
@@ -43,6 +54,15 @@ export default class CryptocurrencyList extends Vue {
       cryptocurrenciesDataList.push({ cryptocurrency: cryptocurrency, ownedAmount: ownedAmount, tickerModel: cryptocurrencyDetails })
     }
     return cryptocurrenciesDataList
+  }
+
+  async addCryptocurrencyToFollowed () {
+    StorageService.addCryptocurrencyToFollowedList(this.availableCryptocurrenciesToFollow.selected)
+    this.availableCryptocurrenciesToFollow = {
+      selected: null,
+      options: this.createSelectableData()
+    }
+    this.cryptocurrencyDataList = await this.fetchCryptocurrenciesData(StorageService.followedCryptocurrencies)
   }
 }
 </script>

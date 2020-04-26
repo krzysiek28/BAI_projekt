@@ -1,7 +1,8 @@
 import { TransactionModel } from '@/models/TransactionModel'
 import { CryptocurrencyAmountModel } from '@/models/CryptocurrencyAmountModel'
+import { ALL_CRYPTOCURRENCIES } from '@/constants/cryptocurrency.constants'
 
-const defaultBalance = 10000
+const defaultBalance = 50000
 
 export class StorageService {
   private static _balance: number = defaultBalance
@@ -12,9 +13,9 @@ export class StorageService {
   private static _ownedCryptocurrencies: Array<CryptocurrencyAmountModel> = []
 
   public static buyCryptocurrency (transactionModel: TransactionModel) {
-    // if (this.hasEnoughMoneyForTransaction(transactionModel.bidPrice, transactionModel.amount)) {
-    //   throw new Error('not enough money')
-    // }
+    if (this.hasEnoughMoneyForTransaction(transactionModel.bidPrice, transactionModel.amount)) {
+      throw new Error('not enough money')
+    }
     this.handleBoughtCryptocurrency(transactionModel)
     this._transactionHistory.push(transactionModel)
   }
@@ -75,6 +76,16 @@ export class StorageService {
 
   public static hasEnoughMoneyForTransaction (price: number, amount: number) {
     return this._balance >= price * amount
+  }
+
+  public static getAvailableCurrenciesToFollow (): Array<string> {
+    return ALL_CRYPTOCURRENCIES.filter(currency => {
+      return !this._followedCryptocurrencyList.includes(currency)
+    })
+  }
+
+  public static addCryptocurrencyToFollowedList (cryptocurrency: string) {
+    this._followedCryptocurrencyList.push(cryptocurrency)
   }
 
   public static reset () {
