@@ -21,7 +21,7 @@ export class StorageService {
   }
 
   private static handleBoughtCryptocurrency (transactionModel: TransactionModel) {
-    this.subtractFromBalance(transactionModel.bidPrice, transactionModel.amount)
+    this.subtractFromBalance(transactionModel.askPrice, transactionModel.amount)
 
     const cryptocurrencyAmount = this._ownedCryptocurrencies.find(entry => entry.cryptocurrency === transactionModel.cryptocurrency)
     if (cryptocurrencyAmount === undefined) {
@@ -41,7 +41,7 @@ export class StorageService {
   }
 
   private static handleSoldCryptocurrency (transactionModel: TransactionModel) {
-    this.addToBalance(transactionModel.askPrice, transactionModel.amount)
+    this.addToBalance(transactionModel.bidPrice, transactionModel.amount)
 
     const cryptocurrencyAmount = this._ownedCryptocurrencies.find(entry => entry.cryptocurrency === transactionModel.cryptocurrency)
     if (cryptocurrencyAmount === undefined || cryptocurrencyAmount.amount < transactionModel.amount) {

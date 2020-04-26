@@ -30,22 +30,12 @@
       </b-row>
     </b-container>
 
-    <h4>Kupione kryptowaluty:</h4>
-    <b-container class="bv-example-row">
-      <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
-        <b-col>
-          <b-table striped hover :items="this.boughtCryptocurrencies" >
-          </b-table>
-        </b-col>
-      </b-row>
-    </b-container>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { StorageService } from '../../services/storage.service'
-import { TransactionModel, TransactionStatus } from '@/models/TransactionModel'
 import { CryptocurrencyAmountModel } from '@/models/CryptocurrencyAmountModel'
 
 @Component
@@ -53,7 +43,6 @@ export default class BalanceInfo extends Vue {
   balance!: number;
   investedMoney!: number;
   profit!: number;
-  boughtCryptocurrencies!: Array<TransactionModel>;
   ownedCryptocurrencies!: Array<CryptocurrencyAmountModel>;
 
   constructor () {
@@ -62,7 +51,6 @@ export default class BalanceInfo extends Vue {
     this.investedMoney = StorageService.investedMoney
     this.profit = StorageService.profit
     this.ownedCryptocurrencies = StorageService.ownedCryptocurrencies
-    this.boughtCryptocurrencies = StorageService.transactionHistory.filter(element => element.status === TransactionStatus.BOUGHT)
   }
 }
 
