@@ -104,20 +104,27 @@ export default class CryptocurrencyRow extends Vue {
   */
 
   handleBuyCryptocurrency (bvModalEvent: Event) {
-    bvModalEvent.preventDefault()
+    // bvModalEvent.preventDefault()
     this.submitBuyingCryptocurrency()
   }
 
   submitBuyingCryptocurrency () {
     // validate + check available balance StorageService.balance > bid_price * amount
+    if(!isNaN(this.amount)) {
+      if(StorageService.balance > this.cryptocurrencyDetailsModel.tickerModel.bid * this.amount){
+        this.buyCryptocurrency()
+        this.reloadData()
+      }else{
+        alert('Nie masz wystarczającej ilości środków, brakuje Ci: '+(this.cryptocurrencyDetailsModel.tickerModel.bid * this.amount-StorageService.balance)+' $');
+      }
+    }else {
+        alert('Podana ilość nie jest liczbą');
+      }
 
-    // execute Action
-    this.buyCryptocurrency()
-    this.reloadData()
     // Hide the modal manually
     // this.$nextTick(() => {
-    //   this.$bvModal.hide('modal-prevent-closing')
-    // })
+    // this.$bvModal.hide('modal-prevent-closing')
+      // })
   }
 
   buyCryptocurrency () {
@@ -137,16 +144,25 @@ export default class CryptocurrencyRow extends Vue {
       Move to component if possible
   */
   handleSellCryptocurrency (bvModalEvent: Event) {
-    bvModalEvent.preventDefault()
+    // bvModalEvent.preventDefault()
     this.submitSellingCryptocurrency()
   }
 
   submitSellingCryptocurrency () {
     // validate + check available balance StorageService.balance > bid_price * amount
 
-    // execute Action
-    this.sellCryptocurrency()
-    this.reloadData()
+    if(!isNaN(this.amount)) {
+      const cryptoCurrencyTemp = StorageService.getCryptocurrencyAmount(this.cryptocurrencyDetailsModel.cryptocurrency)
+      if(cryptoCurrencyTemp >= this.amount) {
+        this.sellCryptocurrency()
+        this.reloadData()
+      } else {
+        alert('Nie możesz tyle sprzedać, brakuje Ci: '+(this.amount-cryptoCurrencyTemp)+' '+this.cryptocurrencyDetailsModel.cryptocurrency)
+      }
+    }else {
+        alert('Podana ilość nie jest liczbą');
+    }
+
     // Hide the modal manually
     // this.$nextTick(() => {
     //   this.$bvModal.hide('modal-prevent-closing')
