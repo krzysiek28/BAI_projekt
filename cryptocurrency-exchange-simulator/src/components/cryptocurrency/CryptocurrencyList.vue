@@ -8,7 +8,7 @@
 
     <b-form-select v-model="availableCryptocurrenciesToFollow.selected" :options="availableCryptocurrenciesToFollow.options"></b-form-select>
     <b-button v-on:click="addCryptocurrencyToFollowed">Dodaj</b-button>
-    <div class="mt-3">Selected: <strong>{{ availableCryptocurrenciesToFollow.selected }}</strong></div>
+    <div class="mt-3">Wybrane: <strong>{{ availableCryptocurrenciesToFollow.selected }}</strong></div>
   </div>
 </template>
 
