@@ -143,7 +143,7 @@ export default class CryptocurrencyRow extends Vue {
       Move to component if possible
   */
   handleSellCryptocurrency (bvModalEvent: Event) {
-    bvModalEvent.preventDefault()
+    // bvModalEvent.preventDefault()
     this.submitSellingCryptocurrency()
   }
 
