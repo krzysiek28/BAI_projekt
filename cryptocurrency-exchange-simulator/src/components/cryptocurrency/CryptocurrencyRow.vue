@@ -3,18 +3,22 @@ import {TransactionStatus} from "@/models/TransactionModel";
 <template>
   <b-container class="cryptoContainer">
     <b-row align-h="center">
-      <b-col cols="6" sm="2" md="1">Nazwa:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.cryptocurrency }} </b></b-col>
-      <b-col cols="6" sm="2" md="1">BID:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.tickerModel.bid }} </b></b-col>
-      <b-col cols="6" sm="2" md="1">ASK:</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.tickerModel.ask }} </b></b-col>
-      <b-col cols="6" sm="2" md="1">Posiadana kwota</b-col><b-col cols="6" sm="2" md="1"><b> {{ cryptocurrencyDetailsModel.ownedAmount }} </b></b-col>
+      <b-col cols="6" sm="2" md="2" lg="1">Nazwa:</b-col>
+      <b-col cols="6" sm="2" md="2" lg="1"><b> {{ cryptocurrencyDetailsModel.cryptocurrency }} </b></b-col>
+      <b-col cols="6" sm="2" md="2" lg="1">BID:</b-col>
+      <b-col cols="6" sm="2" md="2" lg="1"><b> {{ cryptocurrencyDetailsModel.tickerModel.bid }} </b></b-col>
+      <b-col cols="6" sm="2" md="2" lg="1">ASK:</b-col>
+      <b-col cols="6" sm="2" md="2" lg="1"><b> {{ cryptocurrencyDetailsModel.tickerModel.ask }} </b></b-col>
+      <b-col cols="6" sm="2" md="2" lg="1">Posiadana kwota</b-col>
+      <b-col cols="6" sm="2" md="2" lg="1"><b> {{ cryptocurrencyDetailsModel.ownedAmount }} </b></b-col>
       <b-col>
-        <b-button cols="6" sm="4" md="2" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'buy-modal'" variant="success">Kup</b-button>
+        <b-button cols="6" sm="4" md="4" lg="1" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'buy-modal'" variant="success">Kup</b-button>
       </b-col>
       <b-col>
-        <b-button cols="6" sm="4" md="2" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'sell-modal'" variant="danger">Sprzedaj</b-button>
+        <b-button cols="6" sm="4" md="4" lg="1" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'sell-modal'" variant="danger">Sprzedaj</b-button>
       </b-col>
       <b-col>
-        <b-button cols="12" sm="4" md="2" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'details-modal'" variant="outline-primary">Szczegóły</b-button>
+        <b-button cols="12" sm="4" md="4" lg="2" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'details-modal'" variant="outline-primary">Szczegóły</b-button>
       </b-col>
     </b-row>
 
@@ -77,6 +81,9 @@ import {TransactionStatus} from "@/models/TransactionModel";
     </b-modal>
       <b-modal v-bind:id="this.cryptocurrencyDetailsModel.cryptocurrency + 'details-modal'" v-bind:title="'Szczegóły dla '+cryptocurrencyDetailsModel.cryptocurrency">
       <cryptocurrency-details v-bind:cryptocurrency=this.cryptocurrencyDetailsModel.cryptocurrency></cryptocurrency-details>
+      <template v-slot:modal-footer="{ cancel }">
+        <b-button size="sm" variant="success" @click="cancel()">Zamknij</b-button>
+      </template>
     </b-modal>
   </b-container>
 </template>
