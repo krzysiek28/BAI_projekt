@@ -1,6 +1,6 @@
 <template>
   <div class="TransactionHistory">
-    <h4>Historia zakupionych kryptowalut:</h4>
+    <h4><b>Historia zakupionych kryptowalut:</b></h4>
     <b-container class="bv-example-row">
       <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
         <b-col>
@@ -11,7 +11,6 @@
     </b-container>
   </div>
 </template>
-
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { TransactionModel } from '../../models/TransactionModel'
