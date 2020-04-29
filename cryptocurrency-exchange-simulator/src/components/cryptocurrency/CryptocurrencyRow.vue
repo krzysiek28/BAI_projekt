@@ -18,7 +18,10 @@ import {TransactionStatus} from "@/models/TransactionModel";
         <b-button cols="6" sm="4" md="4" lg="1" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'sell-modal'" variant="danger">Sprzedaj</b-button>
       </b-col>
       <b-col>
-        <b-button cols="12" sm="4" md="4" lg="2" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'details-modal'" variant="outline-primary">Szczegóły</b-button>
+        <b-button cols="12" sm="4" md="4" lg="2" v-b-modal="this.cryptocurrencyDetailsModel.cryptocurrency + 'details-modal'" variant="info">Szczegóły</b-button>
+      </b-col>
+      <b-col>
+        <b-button cols="12" sm="4" md="4" lg="2" variant="secondary" v-on:click="this.stopFollowingCryptocurrency">Usuń</b-button>
       </b-col>
     </b-row>
 
@@ -159,6 +162,10 @@ export default class CryptocurrencyRow extends Vue {
 
   reloadData () {
     this.cryptocurrencyDetailsModel.ownedAmount = StorageService.getCryptocurrencyAmount(this.cryptocurrencyDetailsModel.cryptocurrency)
+  }
+
+  stopFollowingCryptocurrency () {
+    this.$emit('removedCryptocurrency', this.cryptocurrencyDetailsModel.cryptocurrency)
   }
 }
 </script>

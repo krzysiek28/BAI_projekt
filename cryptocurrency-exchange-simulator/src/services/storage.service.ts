@@ -86,6 +86,13 @@ export class StorageService {
     this._followedCryptocurrencyList.push(cryptocurrency)
   }
 
+  public static unfollowCryptocurrency (cryptocurrency: string) {
+    const index = this._followedCryptocurrencyList.indexOf(cryptocurrency, 0)
+    if (index > -1) {
+      this._followedCryptocurrencyList.splice(index, 1)
+    }
+  }
+
   public static calculateProfit (): number {
     let profit = 0
     this._transactionHistory.forEach(element => {
