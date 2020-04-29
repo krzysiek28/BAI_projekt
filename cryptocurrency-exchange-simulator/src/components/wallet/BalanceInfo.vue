@@ -50,7 +50,7 @@
       </form>
 
       <template v-slot:modal-footer="{ ok, cancel }">
-        <b-button size="sm" variant="success" @click="ok()">Kup</b-button>
+        <b-button size="sm" variant="success" @click="ok()">Zasil</b-button>
         <b-button size="sm" variant="danger" @click="cancel()">Anuluj</b-button>
       </template>
     </b-modal>
