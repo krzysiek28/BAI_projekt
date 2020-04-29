@@ -1,7 +1,7 @@
 <template>
   <div class="TransactionHistory">
-    <h4><b>Historia zakupionych kryptowalut:</b></h4>
-    <b-container class="bv-example-row">
+    <b-container v-if="transactionHistory && transactionHistory.length !== 0" class="transactionHistoryContainer">
+      <h4><b>Historia zakupionych kryptowalut:</b></h4>
       <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
         <b-col>
           <b-table striped hover :items="this.transactionHistory" >
@@ -28,4 +28,8 @@ export default class TransactionHistory extends Vue {
 </script>
 
 <style scoped>
+.transactionHistoryContainer {
+  padding: 10px;
+  background-color: #E2E2E2;
+}
 </style>
