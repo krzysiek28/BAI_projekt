@@ -3,7 +3,7 @@
     <div class="listContent" v-if="this.cryptocurrencyDataList.length > 0">
       <b-container class="bv-example-row">
         <b-row v-for="dataItem in this.cryptocurrencyDataList" :key="dataItem.cryptocurrency">
-          <cryptocurrency-row :cryptocurrencyDetailsModel="dataItem"/>
+          <cryptocurrency-row @removedCryptocurrency="removeCryptocurrencyFromFollowedList" :cryptocurrencyDetailsModel="dataItem"/>
         </b-row>
       </b-container><br>
       <a><b>Dodatkowa kryptowaluta do śledzenia: </b></a>
@@ -64,6 +64,15 @@ export default class CryptocurrencyList extends Vue {
 
   async addCryptocurrencyToFollowed () {
     StorageService.addCryptocurrencyToFollowedList(this.availableCryptocurrenciesToFollow.selected)
+    this.availableCryptocurrenciesToFollow = {
+      selected: null,
+      options: this.createSelectableData()
+    }
+    this.cryptocurrencyDataList = await this.fetchCryptocurrenciesData(StorageService.followedCryptocurrencies)
+  }
+
+  async removeCryptocurrencyFromFollowedList (cryptocurrency: string) {
+    StorageService.unfollowCryptocurrency(cryptocurrency)
     this.availableCryptocurrenciesToFollow = {
       selected: null,
       options: this.createSelectableData()
