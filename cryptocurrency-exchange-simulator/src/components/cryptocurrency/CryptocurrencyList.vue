@@ -4,12 +4,11 @@
       <b-row v-for="dataItem in this.cryptocurrencyDataList" :key="dataItem.cryptocurrency">
         <cryptocurrency-row :cryptocurrencyDetailsModel="dataItem"/>
       </b-row>
-    </b-container>
-
-    <b-form-select v-model="availableCryptocurrenciesToFollow.selected" :options="availableCryptocurrenciesToFollow.options"></b-form-select>
-    <b-button v-on:click="addCryptocurrencyToFollowed">Dodaj</b-button>
-    <div class="mt-3">Wybrane: <strong>{{ availableCryptocurrenciesToFollow.selected }}</strong></div>
-  </div>
+    </b-container><br>
+    <a><b>Dodatkowa kryptowaluta do śledzenia: </b></a>
+    <b-form-select class="mx-auto" style="width: 100px;" v-model="availableCryptocurrenciesToFollow.selected" :options="availableCryptocurrenciesToFollow.options"></b-form-select>
+    <p><b-button v-on:click="addCryptocurrencyToFollowed">Dodaj</b-button></p>
+    </div>
 </template>
 
 <script lang="ts">
