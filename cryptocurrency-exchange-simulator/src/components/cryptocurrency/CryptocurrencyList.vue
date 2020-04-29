@@ -1,14 +1,17 @@
 <template>
-  <div class="cryptocurrencyList">
-    <b-container class="bv-example-row">
-      <b-row v-for="dataItem in this.cryptocurrencyDataList" :key="dataItem.cryptocurrency">
-        <cryptocurrency-row :cryptocurrencyDetailsModel="dataItem"/>
-      </b-row>
-    </b-container><br>
-    <a><b>Dodatkowa kryptowaluta do śledzenia: </b></a>
-    <b-form-select class="mx-auto" style="width: 100px;" v-model="availableCryptocurrenciesToFollow.selected" :options="availableCryptocurrenciesToFollow.options"></b-form-select>
-    <p><b-button v-on:click="addCryptocurrencyToFollowed">Dodaj</b-button></p>
+  <div class="cryptocurrencyList" >
+    <div class="listContent" v-if="this.cryptocurrencyDataList.length > 0">
+      <b-container class="bv-example-row">
+        <b-row v-for="dataItem in this.cryptocurrencyDataList" :key="dataItem.cryptocurrency">
+          <cryptocurrency-row :cryptocurrencyDetailsModel="dataItem"/>
+        </b-row>
+      </b-container><br>
+      <a><b>Dodatkowa kryptowaluta do śledzenia: </b></a>
+      <b-form-select class="mx-auto" style="width: 100px;" v-model="availableCryptocurrenciesToFollow.selected" :options="availableCryptocurrenciesToFollow.options"></b-form-select>
+      <p><b-button v-on:click="addCryptocurrencyToFollowed">Dodaj</b-button></p>
     </div>
+    <div class="loader" v-if="!dataLoaded"></div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -29,16 +32,20 @@ export default class CryptocurrencyList extends Vue {
 
   availableCryptocurrenciesToFollow: any;
 
+  dataLoaded: boolean;
+
   constructor () {
     super()
     this.availableCryptocurrenciesToFollow = {
       selected: null,
       options: this.createSelectableData()
     }
+    this.dataLoaded = StorageService.followedCryptocurrencies.length === 0
   }
 
   async mounted () {
     this.cryptocurrencyDataList = await this.fetchCryptocurrenciesData(StorageService.followedCryptocurrencies)
+    this.dataLoaded = true
   }
 
   createSelectableData () {
@@ -67,5 +74,26 @@ export default class CryptocurrencyList extends Vue {
 </script>
 
 <style scoped>
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
 
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>
