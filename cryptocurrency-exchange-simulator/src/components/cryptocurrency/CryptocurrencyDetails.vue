@@ -27,7 +27,7 @@ export default class CryptocurrencyDetails extends Vue {
   }
 
   async fetchTradeData (): Promise<CryptocurrencyAllModel> {
-    const x = await  ApiService.getCryptocurrencyInfo(this.cryptocurrency.toUpperCase(), CryptocurrencyConsts.CURRENCIES.PLN, OperationType.ALL)
+    const x = await ApiService.getCryptocurrencyInfo(this.cryptocurrency.toUpperCase(), CryptocurrencyConsts.CURRENCIES.PLN, OperationType.ALL)
     console.log(x.transactions)
     return x
   }
@@ -85,8 +85,7 @@ export default class CryptocurrencyDetails extends Vue {
   praseZero (x: number) {
     if (x < 10) {
       return '0' + x
-    }
-    else {
+    } else {
       return x
     }
   }

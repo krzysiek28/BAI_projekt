@@ -1,6 +1,5 @@
 <template>
   <div class="exchange">
-    <H1>KURSY WALUT</H1>
     <exchange-rates></exchange-rates>
   </div>
 </template>

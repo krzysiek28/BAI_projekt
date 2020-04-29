@@ -110,6 +110,10 @@ export class StorageService {
     return this.calculateProfit() + this.calculateInvestedMoney()
   }
 
+  public static topUpBalance (amount: number) {
+    this._balance = +this._balance + +amount
+  }
+
   public static reset () {
     this._balance = defaultBalance
     this._transactionHistory = []

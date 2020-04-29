@@ -47,7 +47,6 @@ import {TransactionStatus} from "@/models/TransactionModel";
         <b-button size="sm" variant="success" @click="ok()">Kup</b-button>
         <b-button size="sm" variant="danger" @click="cancel()">Anuluj</b-button>
       </template>
-<!--      <cryptocurrency-transaction-buy></cryptocurrency-transaction-buy>-->
     </b-modal>
     <b-modal v-bind:id="this.cryptocurrencyDetailsModel.cryptocurrency + 'sell-modal'"
            title="Kupno kryptowaluty"
@@ -76,8 +75,6 @@ import {TransactionStatus} from "@/models/TransactionModel";
       <b-button size="sm" variant="success" @click="ok()">Sprzedaj</b-button>
       <b-button size="sm" variant="danger" @click="cancel()">Anuluj</b-button>
     </template>
-
-<!--      <cryptocurrency-transaction-sell></cryptocurrency-transaction-sell>-->
     </b-modal>
       <b-modal v-bind:id="this.cryptocurrencyDetailsModel.cryptocurrency + 'details-modal'" v-bind:title="'Szczegóły dla '+cryptocurrencyDetailsModel.cryptocurrency">
       <cryptocurrency-details v-bind:cryptocurrency=this.cryptocurrencyDetailsModel.cryptocurrency></cryptocurrency-details>
@@ -89,49 +86,34 @@ import {TransactionStatus} from "@/models/TransactionModel";
 </template>
 
 <script lang="ts">
-  import {Component, Prop, Vue} from 'vue-property-decorator'
-  import {StorageService} from '@/services/storage.service'
-  import {TransactionStatus} from '@/models/TransactionModel'
-  import CryptocurrencyTransactionBuy from '@/components/cryptocurrency/CryptocurrencyTransactionBuy.vue'
-  import CryptocurrencyDetails from '@/components/cryptocurrency/CryptocurrencyDetails.vue'
-  import CryptocurrencyTransactionSell from '@/components/cryptocurrency/CryptocurrencyTransactionSell.vue'
-  import { CryptocurrencyDetailsModel } from '@/models/CryptocurrencyDetailsModel'
-  import { FormDatepickerPlugin } from 'bootstrap-vue'
+import {Component, Prop, Vue} from 'vue-property-decorator'
+import {StorageService} from '@/services/storage.service'
+import {TransactionStatus} from '@/models/TransactionModel'
+import CryptocurrencyDetails from '@/components/cryptocurrency/CryptocurrencyDetails.vue'
+import { CryptocurrencyDetailsModel } from '@/models/CryptocurrencyDetailsModel'
 
-  @Component({
-  components: { CryptocurrencyTransactionSell, CryptocurrencyDetails, CryptocurrencyTransactionBuy }
+@Component({
+components: { CryptocurrencyDetails }
 })
 export default class CryptocurrencyRow extends Vue {
   @Prop() private cryptocurrencyDetailsModel!: CryptocurrencyDetailsModel;
   amount: number = 0;
 
-  /*
-      BUYING MODAL HANDLING
-      Move to component if possible
-  */
-
   handleBuyCryptocurrency (bvModalEvent: Event) {
-    // bvModalEvent.preventDefault()
     this.submitBuyingCryptocurrency()
   }
 
   submitBuyingCryptocurrency () {
-    // validate + check available balance StorageService.balance > bid_price * amount
-    if(!isNaN(this.amount)) {
-      if(StorageService.balance > this.cryptocurrencyDetailsModel.tickerModel.bid * this.amount){
+    if (!isNaN(this.amount)) {
+      if (StorageService.balance > this.cryptocurrencyDetailsModel.tickerModel.bid * this.amount){
         this.buyCryptocurrency()
         this.reloadData()
-      }else{
+      } else{
         alert('Nie masz wystarczającej ilości środków, brakuje Ci: '+(this.cryptocurrencyDetailsModel.tickerModel.bid * this.amount-StorageService.balance)+' $');
       }
-    }else {
+    } else {
         alert('Podana ilość nie jest liczbą');
       }
-
-    // Hide the modal manually
-    // this.$nextTick(() => {
-    // this.$bvModal.hide('modal-prevent-closing')
-      // })
   }
 
   buyCryptocurrency () {
@@ -145,19 +127,11 @@ export default class CryptocurrencyRow extends Vue {
       cryptocurrency: this.cryptocurrencyDetailsModel.cryptocurrency
     })
   }
-
-  /*
-      SELLING MODAL HANDLING
-      Move to component if possible
-  */
   handleSellCryptocurrency (bvModalEvent: Event) {
-    // bvModalEvent.preventDefault()
     this.submitSellingCryptocurrency()
   }
 
   submitSellingCryptocurrency () {
-    // validate + check available balance StorageService.balance > bid_price * amount
-
     if(!isNaN(this.amount)) {
       const cryptoCurrencyTemp = StorageService.getCryptocurrencyAmount(this.cryptocurrencyDetailsModel.cryptocurrency)
       if(cryptoCurrencyTemp >= this.amount) {
@@ -169,11 +143,6 @@ export default class CryptocurrencyRow extends Vue {
     }else {
         alert('Podana ilość nie jest liczbą');
     }
-
-    // Hide the modal manually
-    // this.$nextTick(() => {
-    //   this.$bvModal.hide('modal-prevent-closing')
-    // })
   }
 
   sellCryptocurrency () {
