@@ -1,5 +1,5 @@
 export interface TransactionModel {
-  date: Date;
+  date: string;
   amount: number;
   price: number;
   bidPrice: number;
