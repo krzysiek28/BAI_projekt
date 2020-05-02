@@ -34,8 +34,8 @@ export const CryptocurrencyConsts = {
     PLN: 'PLN',
     EUR: 'EUR',
     USD: 'USD',
-    BTC: 'BTC',
-    USDC: 'USDC',
     GBP: 'GBP'
   }
 }
+
+export const ALL_CRYPTOCURRENCIES: Array<string> = ['BTC', 'ETH', 'LSK', 'LTC', 'GAME', 'DASH', 'BCC', 'BTG', 'KZC', 'XIN', 'XRP', 'ZEC', 'GNT', 'OMG', 'FTO', 'ZRX', 'PAY', 'BAT', 'REP', 'NEU', 'TRX', 'AMLT', 'EXY', 'BOB', 'LML', 'BSV', 'BCP', 'XLM', 'ALG']

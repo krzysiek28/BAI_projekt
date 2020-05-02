@@ -3,31 +3,29 @@
     <div id="nav">
 
       <b-navbar toggleable="lg" type="dark" variant="dark">
-        <b-navbar-brand href="#">NavBar</b-navbar-brand>
+        <b-navbar-brand href="#">KryptoGra</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
             <b-nav-item>
-              <router-link to="/">Home</router-link>
+              <router-link to="/" class="text-info">Strona główna</router-link>
             </b-nav-item>
             <b-nav-item>
-              <router-link to="/exchange">Exchange</router-link>
+              <router-link to="/exchange" class="text-info">Kursy walut</router-link>
             </b-nav-item>
             <b-nav-item>
-              <router-link to="/walletManagement">Wallet management</router-link>
+              <router-link to="/walletManagement" class="text-info">Zarządzanie portfelem</router-link>
             </b-nav-item>
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-            <button v-on:click="refresh()">Refresh</button>
-            <b-nav-text :key="availableBalance">
-              SALDO: {{availableBalance}} $
+            <b-nav-text :key="availableBalance" class="pt-0-mr-4">
+              Saldo: {{availableBalance.toFixed(2)}} PLN
             </b-nav-text>
           </b-navbar-nav>
-
         </b-collapse>
       </b-navbar>
     </div>
@@ -37,19 +35,26 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { StorageService } from '@/services/storage.service'
+import { EventBus } from '@/constants/EventBus'
 
 @Component
 export default class ManagementPanel extends Vue {
   availableBalance: number;
-  // investedMoney: number;
-  // profit: number;
 
   constructor () {
     super()
     this.availableBalance = StorageService.balance
   }
 
-  refresh () {
+  mounted () {
+    EventBus.$on('balance-change', this.updateBalance)
+  }
+
+  destroyed () {
+    EventBus.$off('balance-change', this.updateBalance)
+  }
+
+  updateBalance () {
     this.availableBalance = StorageService.balance
   }
 }

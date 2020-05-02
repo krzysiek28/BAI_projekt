@@ -1,8 +1,17 @@
 <template>
   <div class="walletManagement">
-    <H1>WALLET MANAGEMENT VIEW</H1>
-    <balance-info></balance-info>
-    <transaction-history></transaction-history>
+    <b-container>
+      <b-row>
+        <b-col>
+          <balance-info></balance-info>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <transaction-history></transaction-history>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 

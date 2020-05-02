@@ -1,6 +1,5 @@
 <template>
   <div class="exchange">
-    <H1>EXCHANGE VIEW</H1>
     <exchange-rates></exchange-rates>
   </div>
 </template>
