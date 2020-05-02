@@ -1,10 +1,9 @@
 <template>
   <div class="exchangeRates">
-    <!--<p>{{currenciesList}}</p>-->
     <b-container class="bv-example-row">
       <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
         <b-col>
-          <b-table striped hover :items="rates"  >
+          <b-table striped hover :fields="currencyTableLabels" :items="rates"  >
           </b-table>
         </b-col>
       </b-row>
@@ -19,6 +18,12 @@ export default {
   data () {
     return {
       currenciesList: [],
+      currencyTableLabels: [
+        { key: 'currency', label: 'Waluta' },
+        { key: 'code', label: 'Kod' },
+        { key: 'bid', label: 'Kupno' },
+        { key: 'ask', label: 'Sprzedaż' }
+      ],
       rates: []
     }
   },

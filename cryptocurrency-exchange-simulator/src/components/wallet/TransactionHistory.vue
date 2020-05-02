@@ -17,6 +17,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { TransactionModel, ShortTransactionModel } from '../../models/TransactionModel'
 import { StorageService } from '../../services/storage.service'
+import { EventBus } from '@/constants/EventBus'
 
 @Component
 export default class TransactionHistory extends Vue {
@@ -44,6 +45,18 @@ export default class TransactionHistory extends Vue {
         cryptocurrency: x.cryptocurrency
       } as ShortTransactionModel)
     })
+  }
+
+  mounted () {
+    EventBus.$on('reset', this.refreshTransactionHistory)
+  }
+
+  destroyed () {
+    EventBus.$off('reset', this.refreshTransactionHistory)
+  }
+
+  refreshTransactionHistory () {
+    this.transactionHistory = StorageService.transactionHistory
   }
 }
 </script>

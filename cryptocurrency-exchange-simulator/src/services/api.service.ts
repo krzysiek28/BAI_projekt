@@ -1,8 +1,10 @@
+import { NBPResponseModel } from '@/models/NBPResponseModel'
+
 const NBP_URL = 'http://api.nbp.pl/api/'
 const BIT_BAY_URL = 'https://bitbay.net/API/Public/'
 
 export class ApiService {
-  public static getCurrenciesInfo () {
+  public static getCurrenciesInfo (): Promise<Array<NBPResponseModel>> {
     return fetch(NBP_URL + 'exchangerates/tables/C/')
       .then(response => response.json())
       .then(data => {

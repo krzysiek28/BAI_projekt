@@ -75,18 +75,27 @@
              title="Wymiana walut"
              @ok="handleCurrencyExchange">
 
-      <form ref="form" @submit.stop.prevent="submitCurrencyExchange"
+      <form ref="form" @submit.stop.prevent="handleCurrencyExchange"
             label-for="amount-input"
             invalid-feedback="Nie podano wartości!">
         <b-form-group label-for="amount-input">
-          <b-card></b-card>
-          <b-form-select class="mx-auto" style="width: 100px;" v-model="currenciesToExchange.selected" :options="currenciesToExchange.options" required></b-form-select>
-          <b-form-input
-            id="amount-input"
-            v-model="currencyAmount"
-          ></b-form-input>
-          <b-form-radio v-model="buyOrSell" value="BUY">Kup</b-form-radio>
-          <b-form-radio v-model="buyOrSell" value="SELL">Sprzedaj</b-form-radio>
+          <b-container class="cryptoContainer">
+            <b-row align-h="center">
+              <b-col><b-table striped hover :fields="currencyRatesLabels" :items="this.currencyRates"></b-table></b-col>
+            </b-row>
+            <b-row align-h="center">
+              <b-col><b-form-select class="mx-auto" style="width: 100px;" v-model="currenciesToExchange.selected" :options="currenciesToExchange.options" required></b-form-select></b-col>
+              <b-col><b-form-input
+                id="amount-input"
+                v-model="currencyAmount"
+                required
+              ></b-form-input></b-col>
+              <b-col>
+                <b-form-radio v-model="buyOrSell" value="BUY">Kup</b-form-radio>
+                <b-form-radio v-model="buyOrSell" value="SELL">Sprzedaj</b-form-radio>
+              </b-col>
+            </b-row>
+          </b-container>
         </b-form-group>
       </form>
       <template v-slot:modal-footer="{ ok, cancel }">
@@ -114,6 +123,8 @@ import { StorageService } from '../../services/storage.service'
 import { CurrencyAmountModel } from '@/models/CurrencyAmountModel'
 import { EventBus } from '@/constants/EventBus'
 import { CryptocurrencyConsts } from '@/constants/cryptocurrency.constants'
+import { ApiService } from '@/services/api.service'
+import { NBPRateModel } from '@/models/NBPRateModel'
 
 @Component
 export default class BalanceInfo extends Vue {
@@ -136,7 +147,14 @@ export default class BalanceInfo extends Vue {
   amount = 0;
   currencyAmount = 0;
   currenciesToExchange: any;
-  buyOrSell = '';
+  buyOrSell = 'BUY';
+  currencyRates: Array<NBPRateModel> = [];
+  currencyRatesLabels = [
+    { key: 'currency', label: 'Waluta' },
+    { key: 'code', label: 'Kod' },
+    { key: 'bid', label: 'Cena Kupna' },
+    { key: 'ask', label: 'Cena Sprzedaży' }
+  ];
 
   constructor () {
     super()
@@ -147,9 +165,18 @@ export default class BalanceInfo extends Vue {
     this.ownedCryptocurrencies = StorageService.ownedCryptocurrencies
     this.ownedCurrencies = StorageService.ownedCurrencies
     this.currenciesToExchange = {
-      selected: null,
+      selected: 'EUR',
       options: [CryptocurrencyConsts.CURRENCIES.EUR, CryptocurrencyConsts.CURRENCIES.USD, CryptocurrencyConsts.CURRENCIES.GBP]
     }
+  }
+
+  async mounted () {
+    const currenciesInfo = await ApiService.getCurrenciesInfo()
+    currenciesInfo[0].rates.forEach(element => {
+      if (element.code === CryptocurrencyConsts.CURRENCIES.EUR || element.code === CryptocurrencyConsts.CURRENCIES.USD || element.code === CryptocurrencyConsts.CURRENCIES.GBP) {
+        this.currencyRates.push(element)
+      }
+    })
   }
 
   handleTransferMoney (bvModalEvent: Event) {
@@ -168,24 +195,34 @@ export default class BalanceInfo extends Vue {
 
   restart () {
     StorageService.reset()
+    this.balance = StorageService.balance
+    this.investedMoney = StorageService.calculateInvestedMoney()
+    this.profit = StorageService.calculateProfit()
+    this.incomeOrLoss = StorageService.calculateTotalIncomeOrLoss()
+    this.ownedCryptocurrencies = StorageService.ownedCryptocurrencies
+    this.ownedCurrencies = StorageService.ownedCurrencies
+    EventBus.$emit('balance-change')
+    EventBus.$emit('reset')
   }
 
-  handleCurrencyExchange () {
+  async handleCurrencyExchange () {
     if (!isNaN(this.currencyAmount)) {
       if (this.buyOrSell === 'BUY') {
-        if (this.balance < 10) { // tu musimy sprawdzić rate
+        const buyingRate = this.getCurrencyRateModel().bid
+        if (this.balance < buyingRate * this.currencyAmount) {
           alert('Nie masz wystarczająco środków')
         } else {
-          StorageService.buyCurrency(this.currenciesToExchange.selected, this.currencyAmount, 10)
+          StorageService.buyCurrency(this.currenciesToExchange.selected, this.currencyAmount, buyingRate)
           this.balance = StorageService.balance
           this.ownedCurrencies = StorageService.ownedCurrencies
         }
       } else if (this.buyOrSell === 'SELL') {
         const cryptoCurrencyTemp = StorageService.getCurrencyAmount(this.currenciesToExchange.selected)
+        const sellingRate = this.getCurrencyRateModel().ask
         if (cryptoCurrencyTemp < this.currencyAmount) {
           alert('Nie posiadasz tyle ' + this.currenciesToExchange.selected)
         } else {
-          StorageService.sellCurrency(this.currenciesToExchange.selected, this.currencyAmount, 10)
+          StorageService.sellCurrency(this.currenciesToExchange.selected, this.currencyAmount, sellingRate)
           this.balance = StorageService.balance
           this.ownedCurrencies = StorageService.ownedCurrencies
         }
@@ -193,6 +230,15 @@ export default class BalanceInfo extends Vue {
       EventBus.$emit('balance-change')
     } else {
       alert('Podana ilość nie jest liczbą')
+    }
+  }
+
+  private getCurrencyRateModel (): NBPRateModel {
+    const currencyModel = this.currencyRates.find(element => element.code === this.currenciesToExchange.selected)
+    if (currencyModel === undefined) {
+      throw new Error('Currency not found')
+    } else {
+      return currencyModel
     }
   }
 }

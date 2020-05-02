@@ -155,8 +155,10 @@ export class StorageService {
 
   public static reset () {
     this._balance = defaultBalance
+    this._followedCryptocurrencyList = ['BTC', 'ETH', 'LSK', 'LTC']
     this._transactionHistory = []
     this._ownedCryptocurrencies = []
+    this._ownedCurrencies = [{ currency: CryptocurrencyConsts.CURRENCIES.PLN, amount: defaultBalance }]
   }
 
   public static get followedCryptocurrencies () {
