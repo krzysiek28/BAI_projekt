@@ -23,11 +23,10 @@
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
             <b-nav-text :key="availableBalance" class="pt-0-mr-4">
-              Saldo: {{availableBalance.toFixed(2)}} $
+              Saldo: {{availableBalance.toFixed(2)}} PLN
             </b-nav-text>
           </b-navbar-nav>
-          <b-button v-on:click="refresh()" variant="secondary">Odśwież</b-button>
-          </b-collapse>
+        </b-collapse>
       </b-navbar>
     </div>
   </div>
@@ -36,6 +35,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { StorageService } from '@/services/storage.service'
+import { EventBus } from '@/constants/EventBus'
 
 @Component
 export default class ManagementPanel extends Vue {
@@ -45,6 +45,18 @@ export default class ManagementPanel extends Vue {
 
   constructor () {
     super()
+    this.availableBalance = StorageService.balance
+  }
+
+  mounted () {
+    EventBus.$on('balance-change', this.updateBalance)
+  }
+
+  destroyed () {
+    EventBus.$off('balance-change', this.updateBalance)
+  }
+
+  updateBalance () {
     this.availableBalance = StorageService.balance
   }
 

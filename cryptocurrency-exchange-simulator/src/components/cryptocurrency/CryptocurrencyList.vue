@@ -6,6 +6,8 @@
           <cryptocurrency-row @removedCryptocurrency="removeCryptocurrencyFromFollowedList" :cryptocurrencyDetailsModel="dataItem"/>
         </b-row>
       </b-container><br>
+    </div>
+    <div v-if="dataLoaded">
       <a><b>Dodatkowa kryptowaluta do śledzenia: </b></a>
       <b-form-select class="mx-auto" style="width: 100px;" v-model="availableCryptocurrenciesToFollow.selected" :options="availableCryptocurrenciesToFollow.options"></b-form-select>
       <p><b-button v-on:click="addCryptocurrencyToFollowed">Dodaj</b-button></p>

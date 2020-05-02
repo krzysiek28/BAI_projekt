@@ -1,6 +1,6 @@
 import { TransactionModel, TransactionStatus } from '@/models/TransactionModel'
-import { CryptocurrencyAmountModel } from '@/models/CryptocurrencyAmountModel'
-import { ALL_CRYPTOCURRENCIES } from '@/constants/cryptocurrency.constants'
+import { CurrencyAmountModel } from '@/models/CurrencyAmountModel'
+import { ALL_CRYPTOCURRENCIES, CryptocurrencyConsts } from '@/constants/cryptocurrency.constants'
 
 const defaultBalance = 50000
 
@@ -8,12 +8,10 @@ export class StorageService {
   private static _balance: number = defaultBalance
   private static _followedCryptocurrencyList: Array<string> = ['BTC', 'ETH', 'LSK', 'LTC']
   private static _transactionHistory: Array<TransactionModel> = []
-  private static _ownedCryptocurrencies: Array<CryptocurrencyAmountModel> = []
+  private static _ownedCryptocurrencies: Array<CurrencyAmountModel> = []
+  private static _ownedCurrencies: Array<CurrencyAmountModel> = [{ currency: CryptocurrencyConsts.CURRENCIES.PLN, amount: defaultBalance }]
 
   public static buyCryptocurrency (transactionModel: TransactionModel) {
-    // if (this.hasEnoughMoneyForTransaction(transactionModel.bidPrice, transactionModel.amount)) {
-    //   throw new Error('not enough money')
-    // }
     this.handleBoughtCryptocurrency(transactionModel)
     this._transactionHistory.push(transactionModel)
   }
@@ -21,9 +19,9 @@ export class StorageService {
   private static handleBoughtCryptocurrency (transactionModel: TransactionModel) {
     this.subtractFromBalance(transactionModel.askPrice, transactionModel.amount)
 
-    const cryptocurrencyAmount = this._ownedCryptocurrencies.find(entry => entry.cryptocurrency === transactionModel.cryptocurrency)
+    const cryptocurrencyAmount = this._ownedCryptocurrencies.find(entry => entry.currency === transactionModel.cryptocurrency)
     if (cryptocurrencyAmount === undefined) {
-      this._ownedCryptocurrencies.push({ cryptocurrency: transactionModel.cryptocurrency, amount: transactionModel.amount })
+      this._ownedCryptocurrencies.push({ currency: transactionModel.cryptocurrency, amount: transactionModel.amount })
     } else {
       cryptocurrencyAmount.amount = +cryptocurrencyAmount.amount + +transactionModel.amount
     }
@@ -41,20 +39,20 @@ export class StorageService {
   private static handleSoldCryptocurrency (transactionModel: TransactionModel) {
     this.addToBalance(transactionModel.bidPrice, transactionModel.amount)
 
-    const cryptocurrencyAmount = this._ownedCryptocurrencies.find(entry => entry.cryptocurrency === transactionModel.cryptocurrency)
+    const cryptocurrencyAmount = this._ownedCryptocurrencies.find(entry => entry.currency === transactionModel.cryptocurrency)
     if (cryptocurrencyAmount === undefined || cryptocurrencyAmount.amount < transactionModel.amount) {
       throw new Error('not enough cryptocurrency owned')
     } else {
       cryptocurrencyAmount.amount = +cryptocurrencyAmount.amount - +transactionModel.amount
-      this.removeElementIfAmountEqualZero(cryptocurrencyAmount)
+      this.removeElementIfAmountEqualZero(cryptocurrencyAmount, this._ownedCryptocurrencies)
     }
   }
 
-  private static removeElementIfAmountEqualZero (cryptocurrencyAmount: CryptocurrencyAmountModel) {
+  private static removeElementIfAmountEqualZero (cryptocurrencyAmount: CurrencyAmountModel, currencyList: Array<CurrencyAmountModel>) {
     if (+cryptocurrencyAmount.amount === 0) {
-      const index = this._ownedCryptocurrencies.indexOf(cryptocurrencyAmount, 0)
+      const index = currencyList.indexOf(cryptocurrencyAmount, 0)
       if (index > -1) {
-        this._ownedCryptocurrencies.splice(index, 1)
+        currencyList.splice(index, 1)
       }
     }
   }
@@ -65,7 +63,7 @@ export class StorageService {
 
   public static getCryptocurrencyAmount (cryptocurrency: string): number {
     const ownedCryptocurrency = this._ownedCryptocurrencies.find(entry => {
-      if (entry.cryptocurrency === cryptocurrency) {
+      if (entry.currency === cryptocurrency) {
         return entry
       }
     })
@@ -74,6 +72,40 @@ export class StorageService {
 
   public static hasEnoughMoneyForTransaction (price: number, amount: number) {
     return this._balance >= price * amount
+  }
+
+  public static getCurrencyAmount (currency: string): number {
+    const ownedCurrency = this._ownedCurrencies.find(entry => {
+      if (entry.currency === currency) {
+        return entry
+      }
+    })
+    return ownedCurrency !== undefined ? +ownedCurrency.amount : 0
+  }
+
+  public static buyCurrency (currency: string, amount: number, buyingRate: number) {
+    this.subtractFromBalance(+buyingRate, +amount)
+    this.handleCurrencyTransaction(currency, -(+amount * +buyingRate), +amount)
+  }
+
+  public static sellCurrency (currency: string, amount: number, sellingRate: number) {
+    this.addToBalance(+sellingRate, +amount)
+    this.handleCurrencyTransaction(currency, +amount * +sellingRate, -+amount)
+  }
+
+  public static handleCurrencyTransaction (currency: string, plnAmount: number, otherCurrencyAmount: number) {
+    const currencyAmount = this._ownedCurrencies.find(currencyAmount => currencyAmount.currency === currency)
+    const plnCurrencyAmount = this._ownedCurrencies.find(currencyAmount => currencyAmount.currency === CryptocurrencyConsts.CURRENCIES.PLN)
+    if (plnCurrencyAmount === undefined) {
+      throw new Error('pln currency not found')
+    }
+    if (currencyAmount === undefined) {
+      this._ownedCurrencies.push({ currency: currency, amount: otherCurrencyAmount })
+    } else {
+      currencyAmount.amount = +currencyAmount.amount + +otherCurrencyAmount
+      this.removeElementIfAmountEqualZero(currencyAmount, this._ownedCurrencies)
+    }
+    plnCurrencyAmount.amount = plnCurrencyAmount.amount + plnAmount
   }
 
   public static getAvailableCurrenciesToFollow (): Array<string> {
@@ -141,5 +173,9 @@ export class StorageService {
 
   public static get ownedCryptocurrencies () {
     return this._ownedCryptocurrencies
+  }
+
+  public static get ownedCurrencies () {
+    return this._ownedCurrencies
   }
 }

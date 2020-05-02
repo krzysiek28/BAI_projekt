@@ -34,8 +34,6 @@ export const CryptocurrencyConsts = {
     PLN: 'PLN',
     EUR: 'EUR',
     USD: 'USD',
-    BTC: 'BTC',
-    USDC: 'USDC',
     GBP: 'GBP'
   }
 }

@@ -94,6 +94,7 @@ import {StorageService} from '@/services/storage.service'
 import {TransactionStatus} from '@/models/TransactionModel'
 import CryptocurrencyDetails from '@/components/cryptocurrency/CryptocurrencyDetails.vue'
 import { CryptocurrencyDetailsModel } from '@/models/CryptocurrencyDetailsModel'
+import { EventBus } from '@/constants/EventBus'
 
 @Component({
 components: { CryptocurrencyDetails }
@@ -161,6 +162,7 @@ export default class CryptocurrencyRow extends Vue {
   }
 
   reloadData () {
+    EventBus.$emit('balance-change')
     this.cryptocurrencyDetailsModel.ownedAmount = StorageService.getCryptocurrencyAmount(this.cryptocurrencyDetailsModel.cryptocurrency)
   }
 
