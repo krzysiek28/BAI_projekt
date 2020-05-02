@@ -1,6 +1,6 @@
 <template>
-  <div class="balanceInfo">
-    <b-card no-body class="mx-auto shadow" style="max-width: 540px; background: #E2E2E2">
+  <div m-5 class="balanceInfo">
+    <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
       <b-row no-gutters>
         <b-col md="6">
           <b-card-body title="Saldo">
@@ -15,7 +15,7 @@
         </b-col>
       </b-row>
     </b-card>
-    <b-card no-body class="mx-auto shadow" style="max-width: 540px; background: #E2E2E2">
+    <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
       <b-row no-gutters>
         <b-col md="6">
           <b-card-body title="Zainwestowane pięniądze">
@@ -55,11 +55,11 @@
       </template>
     </b-modal>
 
-    <b-card no-body class="mx-auto shadow" style="max-width: 540px; background: #E2E2E2">
+    <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
       <b-button v-on:click="restart()" variant="secondary">Restartuj</b-button>
     </b-card>
 
-    <b-card no-body class="mx-auto shadow" style="max-width: 540px; background: #E2E2E2">
+    <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
       <b-container class="ownedCurrenciesContainer" style="position: relative">
         <h4><b>Posiadane waluty:</b></h4>
         <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
@@ -95,7 +95,7 @@
       </template>
     </b-modal>
 
-    <b-card no-body class="mx-auto shadow" style="max-width: 540px; background: #E2E2E2">
+    <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
       <b-container v-if="ownedCryptocurrencies && ownedCryptocurrencies.length !== 0" class="ownedCryptocurrenciesContainer" style="position: relative">
         <h4><b>Posiadane kryptowaluty:</b></h4>
         <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">

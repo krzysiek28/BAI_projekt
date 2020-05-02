@@ -8,6 +8,14 @@ export interface TransactionModel {
   cryptocurrency: string;
 }
 
+export interface ShortTransactionModel {
+  date: string;
+  amount: number;
+  price: string;
+  status: TransactionStatus;
+  cryptocurrency: string;
+}
+
 export enum TransactionStatus {
   BOUGHT = 'Kupione', SOLD = 'Sprzedane'
 }
