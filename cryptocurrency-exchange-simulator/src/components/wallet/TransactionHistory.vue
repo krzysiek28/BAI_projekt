@@ -1,11 +1,11 @@
 <template>
   <div class="TransactionHistory">
-    <b-card no-body class="mx-auto shadow" style="max-width: 540px; background: #E2E2E2">
+    <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
     <b-container v-if="transactionHistory && transactionHistory.length !== 0" class="transactionHistoryContainer">
       <h4><b>Historia zakupionych kryptowalut:</b></h4>
       <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
         <b-col>
-          <b-table striped hover :fields="this.transactionHistoryLabels" :items="this.transactionHistory" >
+          <b-table striped hover :fields="this.transactionHistoryLabels" :items="this.shortTransactionHistory" >
           </b-table>
         </b-col>
       </b-row>
@@ -15,19 +15,18 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { TransactionModel } from '../../models/TransactionModel'
+import { TransactionModel, ShortTransactionModel } from '../../models/TransactionModel'
 import { StorageService } from '../../services/storage.service'
 
 @Component
 export default class TransactionHistory extends Vue {
   private transactionHistory!: Array<TransactionModel>;
+  private shortTransactionHistory!: Array<ShortTransactionModel>;
 
   private transactionHistoryLabels = [
     { key: 'date', label: 'Data' },
     { key: 'amount', label: 'Ilość' },
     { key: 'price', label: 'Bilans' },
-    { key: 'bidPrice', label: 'Kupno' },
-    { key: 'askPrice', label: 'Sprzedaż' },
     { key: 'status', label: 'Status' },
     { key: 'cryptocurrency', label: 'Kryptowaluta' }
   ]
@@ -35,6 +34,16 @@ export default class TransactionHistory extends Vue {
   constructor () {
     super()
     this.transactionHistory = StorageService.transactionHistory
+    this.shortTransactionHistory = []
+    this.transactionHistory.forEach(x => {
+      this.shortTransactionHistory.push({
+        date: x.date,
+        amount: x.amount,
+        price: (x.price).toFixed(3),
+        status: x.status,
+        cryptocurrency: x.cryptocurrency
+      } as ShortTransactionModel)
+    })
   }
 }
 </script>
