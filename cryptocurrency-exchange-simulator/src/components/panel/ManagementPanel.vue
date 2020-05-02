@@ -40,8 +40,6 @@ import { EventBus } from '@/constants/EventBus'
 @Component
 export default class ManagementPanel extends Vue {
   availableBalance: number;
-  // investedMoney: number;
-  // profit: number;
 
   constructor () {
     super()
@@ -57,10 +55,6 @@ export default class ManagementPanel extends Vue {
   }
 
   updateBalance () {
-    this.availableBalance = StorageService.balance
-  }
-
-  refresh () {
     this.availableBalance = StorageService.balance
   }
 }
