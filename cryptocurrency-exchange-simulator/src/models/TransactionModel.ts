@@ -9,5 +9,5 @@ export interface TransactionModel {
 }
 
 export enum TransactionStatus {
-  BOUGHT, SOLD
+  BOUGHT = 'Kupione', SOLD = 'Sprzedane'
 }
