@@ -1,15 +1,14 @@
 <template>
   <div class="TransactionHistory">
-    <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
-    <b-container v-if="transactionHistory && transactionHistory.length !== 0" class="transactionHistoryContainer">
-      <h4><b>Historia zakupionych kryptowalut:</b></h4>
-      <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
-        <b-col>
-          <b-table striped hover :fields="this.transactionHistoryLabels" :items="this.shortTransactionHistory" >
-          </b-table>
-        </b-col>
-      </b-row>
-    </b-container>
+    <b-card v-if="transactionHistory && transactionHistory.length !== 0" class="mx-auto shadow my-3" style="background: #E2E2E2">
+      <b-container class="transactionHistoryContainer">
+        <h4><b>Historia zakupionych kryptowalut:</b></h4>
+        <b-row>
+          <b-col>
+            <b-table striped hover :fields="this.transactionHistoryLabels" :items="this.shortTransactionHistory" ></b-table>
+          </b-col>
+        </b-row>
+      </b-container>
     </b-card>
   </div>
 </template>

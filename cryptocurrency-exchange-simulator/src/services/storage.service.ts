@@ -105,7 +105,7 @@ export class StorageService {
       currencyAmount.amount = +currencyAmount.amount + +otherCurrencyAmount
       this.removeElementIfAmountEqualZero(currencyAmount, this._ownedCurrencies)
     }
-    plnCurrencyAmount.amount = plnCurrencyAmount.amount + plnAmount
+    plnCurrencyAmount.amount = this._balance
   }
 
   public static getAvailableCurrenciesToFollow (): Array<string> {
@@ -178,6 +178,11 @@ export class StorageService {
   }
 
   public static get ownedCurrencies () {
+    const plnCurrencyAmount = this._ownedCurrencies.find(currencyAmount => currencyAmount.currency === CryptocurrencyConsts.CURRENCIES.PLN)
+    if (plnCurrencyAmount === undefined) {
+      throw new Error('pln currency not found')
+    }
+    plnCurrencyAmount.amount = this._balance
     return this._ownedCurrencies
   }
 }

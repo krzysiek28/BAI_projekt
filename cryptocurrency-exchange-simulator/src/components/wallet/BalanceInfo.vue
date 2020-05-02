@@ -1,119 +1,137 @@
 <template>
-  <div m-5 class="balanceInfo">
-    <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
-      <b-row no-gutters>
-        <b-col md="6">
-          <b-card-body title="Saldo">
-            <b-card-text>{{this.balance.toFixed(2)}}</b-card-text>
-            <b-button sm="2" v-b-modal="'transferMoney'" variant="outline-primary">Zasil portfel</b-button>
-          </b-card-body>
+  <div class="balanceInfo">
+    <b-container>
+      <b-row>
+        <b-col>
+          <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
+            <b-button sm="2" v-b-modal="'transferMoney'" variant="success">Zasil portfel</b-button>
+          </b-card>
         </b-col>
-        <b-col md="6">
-          <b-card-body title="Zysk">
-            <b-card-text>{{this.profit.toFixed(2)}}</b-card-text>
-          </b-card-body>
-        </b-col>
-      </b-row>
-    </b-card>
-    <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
-      <b-row no-gutters>
-        <b-col md="6">
-          <b-card-body title="Zainwestowane pięniądze">
-            <b-card-text>{{this.investedMoney.toFixed(2)}}</b-card-text>
-          </b-card-body>
-        </b-col>
-        <b-col md="6">
-          <b-card-body title="Dochód lub utrata">
-            <b-card-text>{{this.incomeOrLoss.toFixed(2)}}</b-card-text>
-          </b-card-body>
+        <b-col>
+          <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
+            <b-button v-on:click="restart()" variant="secondary">Restartuj</b-button>
+          </b-card>
         </b-col>
       </b-row>
-    </b-card>
-    <br>
-
-    <b-modal v-bind:id="'transferMoney'"
-             title="Jaką kwotą chcesz zasilić portfel?"
-             @ok="handleTransferMoney">
-
-      <form ref="form" @submit.stop.prevent="submitTransferMoney">
-        <b-form-group
-          label="Ilość"
-          label-for="amount-input"
-          invalid-feedback="Nie podano wartości!"
-        >
-          <b-form-input
-            id="amount-input"
-            v-model="amount"
-            required
-          ></b-form-input>
-        </b-form-group>
-      </form>
-
-      <template v-slot:modal-footer="{ ok, cancel }">
-        <b-button size="sm" variant="success" @click="ok()">Zasil</b-button>
-        <b-button size="sm" variant="danger" @click="cancel()">Anuluj</b-button>
-      </template>
-    </b-modal>
-
-    <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
-      <b-button v-on:click="restart()" variant="secondary">Restartuj</b-button>
-    </b-card>
-
-    <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
-      <b-container class="ownedCurrenciesContainer" style="position: relative">
-        <h4><b>Posiadane waluty:</b></h4>
-        <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
-          <b-col>
-            <b-table striped hover :fields="this.ownedCurrenciesLabels" :items="this.ownedCurrencies"></b-table>
-            <b-button v-b-modal="'buySellCurrency'" variant="secondary">Kup/Sprzedaj</b-button>
-          </b-col>
-        </b-row>
-      </b-container>
-    </b-card>
-
-    <b-modal v-bind:id="'buySellCurrency'"
-             title="Wymiana walut"
-             @ok="handleCurrencyExchange">
-
-      <form ref="form" @submit.stop.prevent="handleCurrencyExchange"
-            label-for="amount-input"
-            invalid-feedback="Nie podano wartości!">
-        <b-form-group label-for="amount-input">
-          <b-container class="cryptoContainer">
-            <b-row align-h="center">
-              <b-col><b-table striped hover :fields="currencyRatesLabels" :items="this.currencyRates"></b-table></b-col>
+      <b-row>
+        <b-col sm="6">
+          <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2; min-height: 150px">
+            <b-row no-gutters>
+              <b-col md="6">
+                <b-card-body title="Saldo">
+                  <b-card-text>{{this.balance.toFixed(2)}}</b-card-text>
+                </b-card-body>
+              </b-col>
+              <b-col md="6">
+                <b-card-body title="Zysk">
+                  <b-card-text>{{this.profit.toFixed(2)}}</b-card-text>
+                </b-card-body>
+              </b-col>
             </b-row>
-            <b-row align-h="center">
-              <b-col><b-form-select class="mx-auto" style="width: 100px;" v-model="currenciesToExchange.selected" :options="currenciesToExchange.options" required></b-form-select></b-col>
-              <b-col><b-form-input
-                id="amount-input"
-                v-model="currencyAmount"
-                required
-              ></b-form-input></b-col>
+          </b-card>
+        </b-col>
+        <b-col sm="6">
+          <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2; min-height: 150px">
+            <b-row no-gutters>
+              <b-col md="6">
+                <b-card-body title="Zainwestowane pięniądze">
+                  <b-card-text>{{this.investedMoney.toFixed(2)}}</b-card-text>
+                </b-card-body>
+              </b-col>
+              <b-col md="6">
+                <b-card-body title="Dochód lub utrata">
+                  <b-card-text>{{this.incomeOrLoss.toFixed(2)}}</b-card-text>
+                </b-card-body>
+              </b-col>
+            </b-row>
+          </b-card>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col sm="6">
+        <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
+          <b-container class="ownedCurrenciesContainer" style="position: relative">
+            <h4><b>Posiadane waluty:</b></h4>
+            <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
               <b-col>
-                <b-form-radio v-model="buyOrSell" value="BUY">Kup</b-form-radio>
-                <b-form-radio v-model="buyOrSell" value="SELL">Sprzedaj</b-form-radio>
+                <b-table striped hover :fields="this.ownedCurrenciesLabels" :items="this.ownedCurrencies"></b-table>
+                <b-button v-b-modal="'buySellCurrency'" variant="secondary">Kup/Sprzedaj</b-button>
               </b-col>
             </b-row>
           </b-container>
-        </b-form-group>
-      </form>
-      <template v-slot:modal-footer="{ ok, cancel }">
-        <b-button size="sm" variant="success" @click="ok()">Wymień</b-button>
-        <b-button size="sm" variant="danger" @click="cancel()">Anuluj</b-button>
-      </template>
-    </b-modal>
+        </b-card>
+      </b-col>
+      <b-col>
+        <b-card v-if="ownedCryptocurrencies && ownedCryptocurrencies.length !== 0" no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
+          <b-container class="ownedCryptocurrenciesContainer" style="position: relative">
+            <h4><b>Posiadane kryptowaluty:</b></h4>
+            <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
+              <b-col>
+                <b-table striped hover :fields="this.ownedCryptoccurenciesLabels" :items="this.ownedCryptocurrencies"></b-table>
+              </b-col>
+            </b-row>
+          </b-container>
+        </b-card>
+      </b-col>
+    </b-row>
+  </b-container>
 
-    <b-card no-body class="mx-auto shadow my-3" style="max-width: 540px; background: #E2E2E2">
-      <b-container v-if="ownedCryptocurrencies && ownedCryptocurrencies.length !== 0" class="ownedCryptocurrenciesContainer" style="position: relative">
-        <h4><b>Posiadane kryptowaluty:</b></h4>
-        <b-row cols="1" cols-sm="1" cols-md="1" cols-lg="1">
-          <b-col>
-            <b-table striped hover :fields="this.ownedCryptoccurenciesLabels" :items="this.ownedCryptocurrencies"></b-table>
-          </b-col>
-        </b-row>
-      </b-container>
-    </b-card>
+  <b-modal v-bind:id="'transferMoney'"
+           title="Jaką kwotą chcesz zasilić portfel?"
+           @ok="handleTransferMoney">
+
+    <form ref="form" @submit.stop.prevent="submitTransferMoney">
+      <b-form-group
+        label="Ilość"
+        label-for="amount-input"
+        invalid-feedback="Nie podano wartości!"
+      >
+        <b-form-input
+          id="amount-input"
+          v-model="amount"
+          required
+        ></b-form-input>
+      </b-form-group>
+    </form>
+
+    <template v-slot:modal-footer="{ ok, cancel }">
+      <b-button size="sm" variant="success" @click="ok()">Zasil</b-button>
+      <b-button size="sm" variant="danger" @click="cancel()">Anuluj</b-button>
+    </template>
+  </b-modal>
+
+  <b-modal v-bind:id="'buySellCurrency'"
+           title="Wymiana walut"
+           @ok="handleCurrencyExchange">
+
+    <form ref="form" @submit.stop.prevent="handleCurrencyExchange"
+          label-for="amount-input"
+          invalid-feedback="Nie podano wartości!">
+      <b-form-group label-for="amount-input">
+        <b-container class="cryptoContainer">
+          <b-row align-h="center">
+            <b-col><b-table striped hover :fields="currencyRatesLabels" :items="this.currencyRates"></b-table></b-col>
+          </b-row>
+          <b-row align-h="center">
+            <b-col><b-form-select class="mx-auto" style="width: 100px;" v-model="currenciesToExchange.selected" :options="currenciesToExchange.options" required></b-form-select></b-col>
+            <b-col><b-form-input
+              id="amount-input"
+              v-model="currencyAmount"
+              required
+            ></b-form-input></b-col>
+            <b-col>
+              <b-form-radio v-model="buyOrSell" value="BUY">Kup</b-form-radio>
+              <b-form-radio v-model="buyOrSell" value="SELL">Sprzedaj</b-form-radio>
+            </b-col>
+          </b-row>
+        </b-container>
+      </b-form-group>
+    </form>
+    <template v-slot:modal-footer="{ ok, cancel }">
+      <b-button size="sm" variant="success" @click="ok()">Wymień</b-button>
+      <b-button size="sm" variant="danger" @click="cancel()">Anuluj</b-button>
+    </template>
+  </b-modal>
   </div>
 </template>
 
